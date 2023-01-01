@@ -1,6 +1,6 @@
 <div data-v-5e9078c0=""><h1 data-v-5e9078c0="">
       Top 161 React interview
-      questions and answers in 2021.
+      questions and answers in 2023.
     </h1> <p data-v-5e9078c0="">
       You can check all
       161
