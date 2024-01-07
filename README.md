@@ -1,264 +1,890 @@
-<div data-v-5e9078c0=""><h1 data-v-5e9078c0="">
-      Top 161 React interview
-      questions and answers in 2021.
-    </h1> <p data-v-5e9078c0="">
-      You can check all
-      161
-      React interview questions here 👉
-      https://devinterview.io/dev/react-interview-questions
-    </p> <br data-v-5e9078c0=""> <br data-v-5e9078c0=""> <div data-v-5e9078c0="" class="unit"><div><h2>🔹 1. How does React work?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>React creates a virtual DOM. When state changes in a component it firstly runs a "diffing" algorithm, which identifies what has changed in the virtual DOM. The second step is reconciliation, where it updates the DOM with the results of diff.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="How does React work? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 2. What is context?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>Context</strong> provides a way to pass data through the component tree without having to pass props down manually at every level. For example, authenticated user, locale preference, UI theme need to be accessed in the application by many components.</p><pre><code><span class="token cVar">const</span> <span class="token cBase">{</span>Provider<span class="token cBase">,</span> Consumer<span class="token cBase">}</span> <span class="token cBase">=</span> React<span class="token cBase">.</span><span class="token cMod">createContext</span><span class="token cBase">(</span>defaultValue<span class="token cBase">)</span><span class="token cBase">;</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is context? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 3. What is virtual DOM?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>The virtual DOM (VDOM)</strong> is an in-memory representation of Real DOM. The representation of a UI is kept in memory and synced with the “real” DOM. It’s a step that happens between the render function being called and the displaying of elements on the screen. This entire process is called reconciliation.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is virtual DOM? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 4. What is props in ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>Props</strong> are inputs to a React component. They are single values or objects containing a set of values that are passed to React Components on creation using a naming convention similar to HTML-tag attributes. i.e, <em>They are data passed down from a parent component to a child component.</em></p><p>The primary purpose of props in React is to provide following component functionality:</p><ol><li>Pass custom data to your React component.</li><li>Trigger <code>state</code> changes.</li><li>Use via <code>this.props.reactProp</code> inside component's <code>render()</code> method.</li></ol><p>For example, let us create an element with reactProp property,</p><pre><code> <span class="token cBase">&lt;</span>Element reactProp <span class="token cBase">=</span> <span class="token cString">"1"</span> <span class="token cBase">/</span><span class="token cBase">&gt;</span></code></pre><p>This <code>reactProp</code> (or whatever you came up with) name then becomes a property attached to React's native props object which originally already exists on all components created using React library.</p><pre><code> props<span class="token cBase">.</span>reactProp<span class="token cBase">;</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is props in ReactJS? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 5. What is the use of refs?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>The <strong>ref</strong> is used to return a reference to the element. They should be avoided in most cases, however, they can be useful when we need direct access to DOM element or an instance of a component.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is the use of refs? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 6. What is JEST?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>Jest</strong> is a JavaScript unit testing framework made by Facebook based on Jasmine and provides automated mock creation and a jsdom environment. It's often used for testing React components.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is JEST? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 7. What are the advantages of ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>Below are the advantages of ReactJS:</p><ol><li>Increases the application’s performance with Virtual DOM</li><li>JSX makes code is easy to read and write</li><li>It renders both on client and server side</li><li>Easy to integrate with other frameworks (Angular, BackboneJS) since it is only a view library</li><li>Easy to write UI Test cases and integration with tools such as JEST.</li></ol></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What are the advantages of ReactJS? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 8. What is ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>ReactJS is an <strong>open-source frontend JavaScript library</strong> which is used for building user interfaces especifically for single page applications. It is used for handling view layer for web and mobile apps. React was created by Jordan Walke, a software engineer working for Facebook. ReactJS was first deployed on Facebook’s newsfeed in 2011 and on Instagram.com in 2012.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is ReactJS? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 9. How to write comments in ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>The comments in ReactJS/JSX is similar to javascript multiline comments which are wrapped with curly braces:</p><p><strong>Single-line comments:</strong></p><pre><code><span class="token cBase">&lt;</span>div<span class="token cBase">&gt;</span>
-  <span class="token cBase">{</span><span class="token cComment">/* Single-line comments */</span><span class="token cBase">}</span>
-  Welcome <span class="token cBase">{</span>user<span class="token cBase">}</span><span class="token cBase">,</span> Let's play React
-<span class="token cBase">&lt;</span><span class="token cBase">/</span>div<span class="token cBase">&gt;</span></code></pre><p><strong>Multi-line comments:</strong></p><pre><code><span class="token cBase">&lt;</span>div<span class="token cBase">&gt;</span>
-  <span class="token cBase">{</span><span class="token cComment">/* Multi-line comments for more than
-   one line */</span><span class="token cBase">}</span>
-  Welcome <span class="token cBase">{</span>user<span class="token cBase">}</span><span class="token cBase">,</span> Let's play React
-<span class="token cBase">&lt;</span><span class="token cBase">/</span>div<span class="token cBase">&gt;</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="How to write comments in ReactJS? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 10. How would you write an inline style in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>For example: </p><pre><code><span class="token cBool"><span class="token cBool"><span class="token cBase">&lt;</span>div</span> <span class="token cVar">style</span><span class="token cString"><span class="token cBase">=</span>{{</span> <span class="token cVar"><span class="token">height:</span></span> <span class="token cVar">10</span> <span class="token cVar">}}</span><span class="token cBase">&gt;</span></span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="How would you write an inline style in React? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 11. What are the major features of ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>The major features of ReactJS are as follows,</p><ul><li>It uses <strong>VirtualDOM</strong> instead RealDOM considering that RealDOM manipulations are expensive.</li><li>Supports <strong>server-side rendering</strong></li><li>Follows <strong>Unidirectional</strong> data flow or data binding</li><li>Uses <strong>reusable/composable</strong> UI components to develop the view</li></ul></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What are the major features of ReactJS? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 12. What are props in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>Props are properties that are passed into a child component from its parent, and are readonly.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="What are props in React? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 13. What are the differences between a class component and functional component?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><ul><li><p><strong>Class components</strong> allows you to use additional features such as local state and lifecycle hooks. Also, to enable your component to have direct access to your store and thus holds state.</p></li><li><p>When your component just receives props and renders them to the page, this is a <strong>stateless component</strong>, for which a pure function can be used. These are also called dumb components or presentational components.</p></li></ul></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="What are the differences between a class component and functional component? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 14. Where in a React component should you make an AJAX request?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><code>componentDidMount</code> is where an AJAX request should be made in a React component. </p><p>This method will be executed when the component “mounts” (is added to the DOM) for the first time. This method is only executed once during the component’s life. Importantly, you can’t guarantee the AJAX request will have resolved before the component mounts. If it doesn't, that would mean that you’d be trying to setState on an unmounted component, which would not work. Making your AJAX request in <code>componentDidMount</code> will guarantee that there’s a component to update.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="Where in a React component should you make an AJAX request? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 15. What is the difference between state and props?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>The <em>state</em> is a data structure that starts with a default value when a Component mounts. It may be mutated across time, mostly as a result of user events.</p><p><em>Props</em> (short for properties) are a Component's configuration. They are received from above and immutable as far as the Component receiving them is concerned. A Component cannot change its props, but it is responsible for putting together the props of its child Components. Props do not have to just be data - callback functions may be passed in as props.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="What is the difference between state and props? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 16. What is the difference between a Presentational component and a Container component?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><ul><li><p><strong>Presentational components</strong> are concerned with <em>how things look</em>. They generally receive data and callbacks exclusively via props. These components rarely have their own state, but when they do it generally concerns UI state, as opposed to data state.</p></li><li><p><strong>Container components</strong> are more concerned with <em>how things work</em>. These components provide the data and behavior to presentational or other container components. They call Flux actions and provide these as callbacks to the presentational components. They are also often stateful as they serve as data sources. </p></li></ul></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="What is the difference between a Presentational component and a Container component? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 17. What are refs used for in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><em>Refs</em> are an escape hatch which allow you to get direct access to a DOM element or an instance of a component. In order to use them you add a ref attribute to your component whose value is a callback function which will receive the underlying DOM element or the mounted instance of the component as its first argument.</p><pre><code><span class="token cVar">class</span> <span class="token class-name">UnControlledForm</span> <span class="token cVar">extends</span> <span class="token class-name">Component</span> <span class="token cBase">{</span>
-  <span class="token function-variable cMod">handleSubmit</span> <span class="token cBase">=</span> <span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cBase">{</span>
-    console<span class="token cBase">.</span><span class="token cMod">log</span><span class="token cBase">(</span><span class="token cString">"Input Value: "</span><span class="token cBase">,</span> <span class="token cVar">this</span><span class="token cBase">.</span>input<span class="token cBase">.</span>value<span class="token cBase">)</span>
-  <span class="token cBase">}</span>
-  <span class="token cMod">render</span> <span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">return</span> <span class="token cBase">(</span>
-      <span class="token cBase">&lt;</span>form onSubmit<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cVar">this</span><span class="token cBase">.</span>handleSubmit<span class="token cBase">}</span><span class="token cBase">&gt;</span>
-        <span class="token cBase">&lt;</span>input
-          type<span class="token cBase">=</span><span class="token cString">'text'</span>
-          ref<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cBase">(</span><span class="token parameter">input</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cVar">this</span><span class="token cBase">.</span>input <span class="token cBase">=</span> input<span class="token cBase">}</span> <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-        <span class="token cBase">&lt;</span>button type<span class="token cBase">=</span><span class="token cString">'submit'</span><span class="token cBase">&gt;</span>Submit<span class="token cBase">&lt;</span><span class="token cBase">/</span>button<span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span><span class="token cBase">/</span>form<span class="token cBase">&gt;</span>
-    <span class="token cBase">)</span>
-  <span class="token cBase">}</span>
-<span class="token cBase">}</span></code></pre><p>Above notice that our input field has a ref attribute whose value is a function. That function receives the actual DOM element of input which we then put on the instance in order to have access to it inside of the handleSubmit function.</p><p>It’s often misconstrued that you need to use a class component in order to use refs, but refs can also be used with functional components by leveraging closures in JavaScript.</p><pre><code><span class="token cVar">function</span> <span class="token cMod">CustomForm</span> <span class="token cBase">(</span><span class="token parameter"><span class="token cBase">{</span>handleSubmit<span class="token cBase">}</span></span><span class="token cBase">)</span> <span class="token cBase">{</span>
-  <span class="token cVar">let</span> inputElement
-  <span class="token cVar">return</span> <span class="token cBase">(</span>
-    <span class="token cBase">&lt;</span>form onSubmit<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cMod">handleSubmit</span><span class="token cBase">(</span>inputElement<span class="token cBase">.</span>value<span class="token cBase">)</span><span class="token cBase">}</span><span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span>input
-        type<span class="token cBase">=</span><span class="token cString">'text'</span>
-        ref<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cBase">(</span><span class="token parameter">input</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> inputElement <span class="token cBase">=</span> input<span class="token cBase">}</span> <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span>button type<span class="token cBase">=</span><span class="token cString">'submit'</span><span class="token cBase">&gt;</span>Submit<span class="token cBase">&lt;</span><span class="token cBase">/</span>button<span class="token cBase">&gt;</span>
-    <span class="token cBase">&lt;</span><span class="token cBase">/</span>form<span class="token cBase">&gt;</span>
-  <span class="token cBase">)</span>
-<span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="What are refs used for in React? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 18. What's the difference between a controlled component and an uncontrolled one in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><ul><li>A controlled component has its state completely driven by React,</li><li>Uncontrolled components can maintain their own internal state. E.g., a textarea's value.</li></ul></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="What's the difference between a controlled component and an uncontrolled one in React? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 19. What are controlled components?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>A ReactJS component that controls the input elements within the forms on subsequent user input is called <strong>“Controlled component”</strong>. i.e, every state mutation will have an associated handler function.</p><p>For example, to write all the names in uppercase letters, we use handleChange as below,</p><pre><code><span class="token cMod">handleChange</span><span class="token cBase">(</span><span class="token parameter">event</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">this</span><span class="token cBase">.</span><span class="token cMod">setState</span><span class="token cBase">(</span><span class="token cBase">{</span>
-        value<span class="token cBase">:</span> event<span class="token cBase">.</span>target<span class="token cBase">.</span>value<span class="token cBase">.</span><span class="token cMod">toUpperCase</span><span class="token cBase">(</span><span class="token cBase">)</span>
-    <span class="token cBase">}</span><span class="token cBase">)</span><span class="token cBase">;</span>
-<span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What are controlled components? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 20. What is state in ReactJS?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>State</strong> of a component is an object that holds some information that may change over the lifetime of the component. We should always try to make our state as simple as possible and minimize the number of stateful components.</p><p> Let's create user component with message state,</p><pre><code><span class="token cVar">class</span> <span class="token class-name">User</span> <span class="token cVar">extends</span> <span class="token class-name">React<span class="token cBase">.</span>Component</span> <span class="token cBase">{</span>
-   <span class="token cMod">constructor</span><span class="token cBase">(</span><span class="token parameter">props</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-      <span class="token cVar">super</span><span class="token cBase">(</span>props<span class="token cBase">)</span><span class="token cBase">;</span>
+# 100 Essential React Interview Questions
 
-      <span class="token cVar">this</span><span class="token cBase">.</span>state <span class="token cBase">=</span> <span class="token cBase">{</span>
-         message<span class="token cBase">:</span> <span class="token cString">"Welcome to React world"</span><span class="token cBase">,</span>
-      <span class="token cBase">}</span>
-   <span class="token cBase">}</span>
-   <span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-      <span class="token cVar">return</span> <span class="token cBase">(</span>
-         <span class="token cBase">&lt;</span>div<span class="token cBase">&gt;</span>
-            <span class="token cBase">&lt;</span>h1<span class="token cBase">&gt;</span><span class="token cBase">{</span><span class="token cVar">this</span><span class="token cBase">.</span>state<span class="token cBase">.</span>message<span class="token cBase">}</span><span class="token cBase">&lt;</span><span class="token cBase">/</span>h1<span class="token cBase">&gt;</span>
-         <span class="token cBase">&lt;</span><span class="token cBase">/</span>div<span class="token cBase">&gt;</span>
-      <span class="token cBase">)</span><span class="token cBase">;</span>
-   <span class="token cBase">}</span>
-<span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is state in ReactJS? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 21. When to use a Class Component over a Functional Component?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>If the component need state or lifecycle methods then use class component otherwise use functional component.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="When to use a Class Component over a Functional Component? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 22. What does it mean for a component to be mounted in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>It has a corresponding element created in the DOM and is connected to that.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="What does it mean for a component to be mounted in React? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 23. How do we pass a property from a parent component props to a child component?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>For example: </p><pre><code><span class="token cBool"><span class="token cBool"><span class="token cBase">&lt;</span>ChildComponent</span> <span class="token cVar">someProp</span><span class="token cString"><span class="token cBase">=</span>{props.someProperty}</span> <span class="token cBase">/&gt;</span></span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="How do we pass a property from a parent component props to a child component? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 24. What are fragments?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>It's common pattern in React which is used for a component to return multiple elements. Fragments let you group a list of children without adding extra nodes to the DOM.</p><pre><code><span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-  <span class="token cVar">return</span> <span class="token cBase">(</span>
-    <span class="token cBase">&lt;</span>React<span class="token cBase">.</span>Fragment<span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span>ChildA <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span>ChildB <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span>ChildC <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-    <span class="token cBase">&lt;</span><span class="token cBase">/</span>React<span class="token cBase">.</span>Fragment<span class="token cBase">&gt;</span>
-  <span class="token cBase">)</span><span class="token cBase">;</span>
-<span class="token cBase">}</span></code></pre><p>There is also a shorter syntax which is not supported in many tools</p><pre><code><span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">return</span> <span class="token cBase">(</span>
-      <span class="token cBase">&lt;</span><span class="token cBase">&gt;</span>
-         <span class="token cBase">&lt;</span>ChildA <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-         <span class="token cBase">&lt;</span>ChildB <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-         <span class="token cBase">&lt;</span>ChildC <span class="token cBase">/</span><span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span><span class="token cBase">/</span><span class="token cBase">&gt;</span>
-    <span class="token cBase">)</span><span class="token cBase">;</span>
-  <span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What are fragments? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 25. When rendering a list what is a key and what is it's purpose?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><em>Keys</em> help React identify which items have changed, are added, or are removed. Keys should be given to the elements inside the array to give the elements a stable identity. The best way to pick a key is to use a string that uniquely identifies a list item among its siblings. </p><pre><code><span class="token cMod">render</span> <span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-  <span class="token cVar">return</span> <span class="token cBase">(</span>
-    <span class="token cBase">&lt;</span>ul<span class="token cBase">&gt;</span>
-      <span class="token cBase">{</span><span class="token cVar">this</span><span class="token cBase">.</span>state<span class="token cBase">.</span>todoItems<span class="token cBase">.</span><span class="token cMod">map</span><span class="token cBase">(</span><span class="token cBase">(</span><span class="token parameter"><span class="token cBase">{</span>task<span class="token cBase">,</span> uid<span class="token cBase">}</span></span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cBase">{</span>
-        <span class="token cVar">return</span> <span class="token cBase">&lt;</span>li key<span class="token cBase">=</span><span class="token cBase">{</span>uid<span class="token cBase">}</span><span class="token cBase">&gt;</span><span class="token cBase">{</span>task<span class="token cBase">}</span><span class="token cBase">&lt;</span><span class="token cBase">/</span>li<span class="token cBase">&gt;</span>
-      <span class="token cBase">}</span><span class="token cBase">)</span><span class="token cBase">}</span>
-    <span class="token cBase">&lt;</span><span class="token cBase">/</span>ul<span class="token cBase">&gt;</span>
-  <span class="token cBase">)</span>
-<span class="token cBase">}</span></code></pre><p>Most often you would use IDs from your data as keys. When you don't have stable IDs for rendered items, you may use the item index as a key as a last resort. It is not recommend to use indexes for keys if the items can reorder, as that would be slow. </p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/Pau1fitz/react-interview" rel="noreferrer" target="_blank" title="When rendering a list what is a key and what is it's purpose? Interview Questions Source To Answer">github.com/Pau1fitz</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 26. How to create refs?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p><strong>Refs</strong> are created using <code>React.createRef()</code> method and attached to React elements via the ref attribute. In order to use refs throughout the component, just assign the ref to the instance property with in constructor.</p><pre><code><span class="token cVar">class</span> <span class="token class-name">MyComponent</span> <span class="token cVar">extends</span> <span class="token class-name">React<span class="token cBase">.</span>Component</span> <span class="token cBase">{</span>
-  <span class="token cMod">constructor</span><span class="token cBase">(</span><span class="token parameter">props</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">super</span><span class="token cBase">(</span>props<span class="token cBase">)</span><span class="token cBase">;</span>
-    <span class="token cVar">this</span><span class="token cBase">.</span>myRef <span class="token cBase">=</span> React<span class="token cBase">.</span><span class="token cMod">createRef</span><span class="token cBase">(</span><span class="token cBase">)</span><span class="token cBase">;</span>
-  <span class="token cBase">}</span>
-  <span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">return</span> <span class="token cBase">&lt;</span>div ref<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cVar">this</span><span class="token cBase">.</span>myRef<span class="token cBase">}</span> <span class="token cBase">/</span><span class="token cBase">&gt;</span><span class="token cBase">;</span>
-  <span class="token cBase">}</span>
-<span class="token cBase">}</span></code></pre><p>And:</p><pre><code><span class="token cVar">class</span> <span class="token class-name">UserForm</span> <span class="token cVar">extends</span> <span class="token class-name">Component</span> <span class="token cBase">{</span>
-  <span class="token function-variable cMod">handleSubmit</span> <span class="token cBase">=</span> <span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cBase">{</span>
-    console<span class="token cBase">.</span><span class="token cMod">log</span><span class="token cBase">(</span><span class="token cString">"Input Value is: "</span><span class="token cBase">,</span> <span class="token cVar">this</span><span class="token cBase">.</span>input<span class="token cBase">.</span>value<span class="token cBase">)</span>
-  <span class="token cBase">}</span>
-  <span class="token cMod">render</span> <span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cVar">return</span> <span class="token cBase">(</span>
-      <span class="token cBase">&lt;</span>form onSubmit<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cVar">this</span><span class="token cBase">.</span>handleSubmit<span class="token cBase">}</span><span class="token cBase">&gt;</span>
-        <span class="token cBase">&lt;</span>input
-          type<span class="token cBase">=</span><span class="token cString">'text'</span>
-          ref<span class="token cBase">=</span><span class="token cBase">{</span><span class="token cBase">(</span><span class="token parameter">input</span><span class="token cBase">)</span> <span class="token cBase">=&gt;</span> <span class="token cVar">this</span><span class="token cBase">.</span>input <span class="token cBase">=</span> input<span class="token cBase">}</span> <span class="token cBase">/</span><span class="token cBase">&gt;</span> <span class="token cComment">// Access DOM input in handle submit</span>
-        <span class="token cBase">&lt;</span>button type<span class="token cBase">=</span><span class="token cString">'submit'</span><span class="token cBase">&gt;</span>Submit<span class="token cBase">&lt;</span><span class="token cBase">/</span>button<span class="token cBase">&gt;</span>
-      <span class="token cBase">&lt;</span><span class="token cBase">/</span>form<span class="token cBase">&gt;</span>
-    <span class="token cBase">)</span>
-  <span class="token cBase">}</span>
-<span class="token cBase">}</span></code></pre><p>We can also use it in functional components with the help of closures.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="How to create refs? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 27. What happens when you call setState?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>The state property is updated in a React component with the object passed into setState, and this is done asynchronously. It tells React that this component and its children need to be re-rendered, but React may not do this immediately (it may batch these state update requests for better performance).</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="What happens when you call setState? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 28. What are stateful components?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>If the behaviour of a component is dependent on the state of the component then it can be termed as <em>stateful component</em>. These Stateful components are always class components and have a state that gets initialized in the constructor.</p><pre><code><span class="token cVar">class</span> <span class="token class-name">App</span> <span class="token cVar">extends</span> <span class="token class-name">Component</span> <span class="token cBase">{</span>
- <span class="token cMod">constructor</span><span class="token cBase">(</span><span class="token parameter">props</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-  <span class="token cVar">super</span><span class="token cBase">(</span>props<span class="token cBase">)</span><span class="token cBase">;</span>
-  <span class="token cVar">this</span><span class="token cBase">.</span>state <span class="token cBase">=</span> <span class="token cBase">{</span> count<span class="token cBase">:</span> <span class="token cNum">0</span> <span class="token cBase">}</span><span class="token cBase">;</span>
- <span class="token cBase">}</span>
+<div>
+<p align="center">
+<a href="https://devinterview.io/questions/web-and-mobile-development/">
+<img src="https://firebasestorage.googleapis.com/v0/b/dev-stack-app.appspot.com/o/github-blog-img%2Fweb-and-mobile-development-github-img.jpg?alt=media&token=1b5eeecc-c9fb-49f5-9e03-50cf2e309555" alt="web-and-mobile-development" width="100%">
+</a>
+</p>
 
- <span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span> <span class="token cBase">{</span>
-    <span class="token cComment">// omitted for brevity</span>
-  <span class="token cBase">}</span>
-<span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What are stateful components? Interview Questions Source To Answer">github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 29. How would you prevent a component from rendering in React?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p> Return <code>null</code> from the render method.</p></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/WebPredict/react-interview-questions" rel="noreferrer" target="_blank" title="How would you prevent a component from rendering in React? Interview Questions Source To Answer">github.com/WebPredict</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 30. What is JSX?</h2></div> <div><h3>Answer:</h3> <div class="answer"><div><div><div class="AnswerBody"><p>JSX is a syntax notation for <strong>JavaScript XML</strong>(XML-like syntax extension to ECMAScript). It stands for JavaScript XML. It provides expressiveness of JavaScript along with HTML like template syntax. For example, the below text inside h1 tag return as javascript function to the render function,</p><pre><code>   <span class="token cMod">render</span><span class="token cBase">(</span><span class="token cBase">)</span><span class="token cBase">{</span>
-    	<span class="token cVar">return</span><span class="token cBase">(</span>
-         <span class="token cBase">&lt;</span>div<span class="token cBase">&gt;</span>
-            <span class="token cBase">&lt;</span>h1<span class="token cBase">&gt;</span> Welcome to React world<span class="token cBase">!</span><span class="token cBase">!</span><span class="token cBase">&lt;</span><span class="token cBase">/</span>h1<span class="token cBase">&gt;</span>
-         <span class="token cBase">&lt;</span><span class="token cBase">/</span>div<span class="token cBase">&gt;</span>
-    	<span class="token cBase">)</span><span class="token cBase">;</span>
-     <span class="token cBase">}</span></code></pre></div></div><div class="row my-2"><div><span><i>Source:</i>&nbsp;<span><a href="https://github.com/sudheerj/reactjs-interview-questions" rel="noreferrer" target="_blank" title="What is JSX? Interview Questions Source To Answer">https://github.com/sudheerj</a></span></span>&nbsp; &nbsp;</div></div></div></div></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 31. How error boundaries handled in React (15)?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 32. Where is the state kept in a React + Redux application?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 33. What are the limitations of ReactJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 34. What is the difference between React Native and React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 35. What are stateless components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 36. How is React different from AngularJS (1.x)?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 37. What is the point of Redux?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 38. Why is it necessary to capitalize the components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 39. What is the difference between state and props?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 40. What is Flow?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 41. How to create components in ReactJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 42. What is the purpose of callback function as an argument of setState?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 43. What are portals in ReactJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 44. How to pass a parameter to an event handler or callback?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 45. What’s the difference between an "Element" and a "Component" in React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 46. What happens during the lifecycle of a React component?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 47. What is Flux?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 48. What is the difference between component and container in react Redux?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 49. What is inline conditional expressions?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 50. How do you prevent the default behavior in an event callback in React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 51. What is reconciliation?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 52. What is the purpose of using super constructor with props argument?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 53. What happens when you call "setState"?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 54. Describe how events are handled in React.</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 55. What is the difference between Element and Component?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 56. What are Higher-Order components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 57. Name the different lifecycle methods.</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 58. What is a higher order component?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 59. What is JSX?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 60. What is state in react?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 61. What are controlled components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 62. What is a store in redux?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 63. How would you prevent a component from rendering?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 64. What don't you like about React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 65. What advantages are using arrow functions?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 66. Why is it advised to pass a callback function to setState as opposed to an object?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 67. What's the typical pattern for rendering a list of components from an array of data?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 68. What are PropTypes in React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 69. What are Pure Components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 70. What are the advantages of React over VueJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 71. Name some popular Flux Libraries</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 72. What's the typical flow of data like in a React + Redux app?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 73. What are synthetic events in ReactJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 74. What's an alternative way to avoid having to bind to this in event callback methods?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 75. What are some limitations of things you shouldn't do in the component's render method?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 76. How to bind methods or event handlers in JSX callbacks?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 77. What is useState() in React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 78. What is the difference between createElement and cloneElement?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 79. Why fragments are better than container divs?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 80. What is prop drilling and how can you avoid it?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 81. What is an action?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 82. What is the point of shouldComponentUpdate() method?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 83. What are forward refs?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 84. What do these three dots (...) in React do?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 85. How do you tell React to build in Production mode and what will that do?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 86. What are typical middleware choices for handling asynchronous calls in Redux?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 87. What are the lifecycle methods of ReactJS?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 88. What are the different phases of ReactJS component lifecycle?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 89. What is Key and benefit of using it in lists?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 90. What's the difference between an Element and a Component in React?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 91. What is the difference between ShadowDOM and VirtualDOM?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 92. Why do class methods need to be bound to a class instance?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 93. What are stateless components?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 94. What is ReactDOM?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 95. What is children prop?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 96. Why ReactJS uses className over class attribute?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 97. What are React Hooks?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 98. What does "shouldComponentUpdate" do and why is it important?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 99. What's the difference between a "smart" component and a "dumb" component?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div><div data-v-5e9078c0="" class="unit"><div><h2>🔹 100. What is the render method for?</h2></div> <div>
-    👉🏼 Check
-    <a href="https://devinterview.io/dev/react-interview-questions">all 161 answers</a></div> <br><br></div> <div data-v-5e9078c0="" class="end"></div> <br data-v-5e9078c0="">
-    Thanks 🙌 for reading and good luck on your next tech interview!
-    <br data-v-5e9078c0="">
-    Explore 3800+ dev interview question here 👉
-    <a data-v-5e9078c0="" href="https://devinterview.io/">Devinterview.io</a></div>
+#### You can also find all 100 answers here 👉 [Devinterview.io - React](https://devinterview.io/questions/web-and-mobile-development/react-interview-questions)
+
+<br>
+
+## 1. What is _React_ and why is it used?
+
+**React** is an open-source, front-end JavaScript library for building user interfaces, that focuses on reusable components and virtual DOM for performance.
+
+### Core Concepts
+
+#### Virtual DOM
+
+**React's Virtual DOM** is a lightweight in-memory representation of the actual DOM elements. When changes occur, React compares the current Virtual DOM with a shadow copy and efficiently updates only the changed portions in the real DOM.
+
+This mechanism significantly reduces expensive direct DOM manipulations, resulting in improved performance and responsiveness in web applications.
+
+#### Components
+
+**React Components** encapsulate both the visual and the corresponding logic. They can be either classes or pure functions. This modular architecture and the ability to nest and reuse components make React a powerful UI toolkit.
+
+Components are broken down into two main types:
+
+1. **Class Components:** These are ES6 classes that can hold state and offer lifecycle methods.
+2. **Functional Components:** Primarily plain JavaScript functions: until the advent of "hooks," they couldn't maintain states.
+
+Key changes, starting from React 16.8:
+
+- Introduction of new hooks API expanded state-management to functional components
+- Popular hooks include `useState` for state management and `useEffect` for lifecycle management.
+
+Beyond this foundational structure, hooks offer extensive state, lifecycle, and context APIs, making functional components powerful building blocks.
+
+#### Unidirectional Data-flow
+
+React mandates a **one-way** data flow, empowering developers to understand and manage data propagation more effectively. This simplifies tracking, debugging, and validating data changes across the application.
+
+While sibling components can communicate indirectly through shared parent components, direct communication among sibling components is typically discouraged.
+
+#### JSX: Syntactic Sugar
+
+**JSX** empowers developers by offering a more intuitive, HTML-like syntax for embedding JavaScript expressions. This marriage of UI and logic not only renders extensive possibilities but also promotes code organization and readability.
+
+### Why use React?
+
+#### Declarative Programming Paradigm 
+
+React enables a **declarative style** of programming: developers define the interface's desired state, and React ensures the DOM reflects that state. This approach is more intuitive and helps in designing clear, maintainable code.
+
+#### Strong Community Backing and Ecosystem
+
+React has been gaining momentum with an enthusiastic community regularly contributing new solutions, updates, and robust third-party libraries. The supportive ecosystem extends to comprehensive toolsets for better development and debugging (like React DevTools).
+
+#### Reusability and Composability
+
+React's architecture is built on **reusable components**, fostering modular, consistent UI elements and logic that can be redeployed across projects or shared with others.
+
+#### Performance Optimization
+
+The Virtual DOM serves as a powerful performance amplifier, and features like providing keys to iterated lists ensure efficient and targeted DOM updates. React is also capable of server-side rendering, bolstering app speed and SEO-friendliness.
+
+#### Effective Data Management
+
+For application-wide state management, React provides **Context API** and libraries like Redux. Meanwhile, local state management with hooks like `useState` streamlines state handling within components.
+
+### Code Example: Functional vs Class-Based Components
+
+Here is the React code:
+
+```jsx
+// Functional Component with useState hook
+import React, { useState } from 'react';
+
+export default function Button() {
+  const [count, setCount] = useState(0);
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
+}
+
+// Class-based Component
+import React, { Component } from 'react';
+
+export default class Button extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  render() {
+    return (
+      <button onClick={() => this.setState({ count: this.state.count + 1 })}>
+        Clicked {this.state.count} times
+      </button>
+    );
+  }
+}
+```
+<br>
+
+## 2. How is _React_ different from _Angular_ or _Vue_?
+
+When comparing **React, Angular, and Vue.js**, a few key differentiators stand out.
+
+### Core Philosophy
+
+- **React**: Focuses on UI components. You need other libraries for state management, routing, etc.
+- **Angular**: Provides a more comprehensive solution out of the box, often called "batteries included."
+- **Vue.js**: A good balance of providing core libraries and flexibility for integration with third-party tools.
+
+### Learning Curve
+
+- **React**: Initially simpler to learn due to its focused nature, but can become complex as you add more external libraries.
+- **Angular**: Steeper learning curve because of its complete ecosystem, including modules, services, and complex directives.
+- **Vue.js**: Known for its gentle learning curve and clear, concise documentation.
+
+### Community and Ecosystem
+
+- **React**: Enjoys an enormous community, and users can pick and choose from a vast array of third-party libraries to complement its core features.
+- **Angular**: Boasts a comprehensive ecosystem that's well-managed by its developers and is known for its enterprise support.
+- **Vue.js**: While the newest of these frameworks, it has been growing rapidly, with a dedicated team and a flourishing community.
+
+### Performance
+
+- **React**: Focuses on efficient rendering and offers built-in tools for performance optimization.
+- **Angular**: Optimizes performance through features like Ahead-Of-Time (AOT) compilation and Zone.js, which prevents unnecessary digest cycles.
+- **Vue.js**: Also optimized for performance, with a small bundle size and features like lazy-loading components.
+
+### Official State Management
+
+- **React**: Employs component state (with `setState`) and also external state management libraries like **Redux**, **MobX**, and the newer **Context API**.
+- **Angular**: Primarily uses services and **RxJS** for more structured reactive state management.
+- **Vue.js**: Offers Vuex, a state management pattern and library dedicated to Vue applications.
+
+### Language Support
+
+- **React**: Developed with **JavaScript** and its supersets (**JSX** and **TypeScript**) in mind.
+- **Angular**: Primarily designed for **TypeScript** but supports JavaScript and Dart as well.
+- **Vue.js**: Offers support for both **JavaScript** and **TypeScript**.
+
+### Templating Approach
+
+- **React**: Utilizes JSX, which combines HTML and JS within JavaScript files. It offers a more concise approach and closely intertwines HTML with JS logic.
+- **Angular**: Has a complete separation of concerns with TypeScript, HTML, and CSS in separate files.
+- **Vue.js**: Allows for both **single-file components** (SFCs) that encapsulate HTML, JavaScript, and CSS, as well as the traditional trio of separate files.
+
+### Language Server Support
+
+- **React**: Known for limited tooling support due to *runtime-oriented* nature, but effective tooling is available for **TypeScript** and **Flow**.
+- **Angular**: Offers full **TypeScript** support with features like auto-completion, refactoring, and more, thanks to its built-in language service.
+- **Vue.js**: Supports comprehensive programming features, including type verification, integrated debugging, and intelligent code suggestions.
+<br>
+
+## 3. What is a _React component_?
+
+A **React component** represents a modular, reusable piece of the user interface. It can encapsulate both **visual elements** (rendered in the Virtual DOM) and **application logic**. React components come in two primary forms: **function components** and **class components**.
+
+### Function vs. Class Components
+
+- **Function Components**: These are stateless, simpler to read, and ideally used for small, specialized UI elements known as 'dumb' components. They are pure functions, perceptually faster because of fewer checks. 
+
+- **Class Components**: These can maintain state and expose more advanced features like lifecycle methods. However, the introduction of hooks to function components in React 16.8 technically made state management possible without classes.
+
+### JSX and `render()`
+
+React components generally use JSX (an XML-like syntax) to describe the UI and a `render()` method to define the **visual makeup**.
+
+- **JSX**: This "syntactic sugar" streamlines component building. It is converted into standard JavaScript calls. Babel is often used to compile this code.
+- **`render()`**: Required for class components, it tells React what the component's output should be when rendered.
+
+### Structural Coherence
+
+Components in React link together, forming a tree structure. A **root component** is the entry point, and from there, it houses other components. 
+
+### Data Flow
+
+React follows a **unidirectional data flow**. This means data moves from the top of the component tree (parent) down to leaves (children) through component **props**. Changes are signaled back up the tree via **callbacks**.
+
+### State and Props
+
+Both function and class components can receive data via two main routes:
+
+- **Props**: Short for properties, these are akin to function arguments and are immutable. They're the mechanism for parent-child data transfer.
+- **State**: This is functionally the component's "memory" and is mutable. Components keep track of their state and re-render upon state change.
+
+### Lifecycle Operations
+
+Class components support a series of **lifecycle methods**. These can be used to run code at specific points in the component's lifecycle, such as upon mounting (creation), updating, or unmounting (removal).
+
+Custom classes and the lifecycle methods within were the primary mechanism for side effects earlier in React. While class-based components aren't as central to the framework with the advent of hooks, they're still relevant and in use, especially when using versions < 16.8.1 and realizing the components' lifecycle patterns in codebases.
+<br>
+
+## 4. How do you create a _component_ in _React_?
+
+Creating a React component involves defining its structure, behavior, and sometimes lifecycle methods for dynamic updates. Components can be **functional** or **class-based**.
+
+### Code Example
+
+Here's a  **Class-based** component:
+
+```jsx
+import React, { Component } from 'react';
+
+class Greeting extends Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+```
+
+And here's a **Functional** one:
+
+```jsx
+import React from 'react';
+
+const Greeting = ({ name }) => <h1>Hello, {name}!</h1>;
+```
+
+Both examples showcase a basic greeting component that takes in a prop `name` and displays a greeting message.
+
+#### Linters and JSX
+Many modern text editors and IDEs support JSX and JavaScript syntax, especially when integrated with linters like ESLint. This setup provides real-time feedback on errors and formatting issues.
+
+#### Code Styling with AirBNB and Prettier
+It's common to see code bases following the **Airbnb** style guide, often coupled with **Prettier** for consistent and automated code formatting.
+
+In the context of component creation, these standards can dictate whether to use single or double quotes for JSX attributes and the method for defining components.
+
+### Key Takeaways
+
+- JSX offers a natural, HTML-like syntax for building components in React.
+- Components can be function-based or class-based.
+- Use modern editing tools and linters for improved code consistency and spotting potential issues in real-time.
+<br>
+
+## 5. What is _JSX_ and why do we use it in _React_?
+
+**JSX** is a powerful JavaScript Extension that enables the seamless integration of HTML-like structures within React. Notably, it allows for a more **intuitive** component declaration and enhanced developer **productivity**.
+
+### Key Features
+
+- **Readable Syntax**: Familiar HTML tags make parsing code and debugging simpler.
+
+- **Component Embedding**: JSX supports direct embedding of components, which enhances modularity.
+
+- **Automatic Babel Conversion**: Behind the scenes, JSX and its HTML-like tags are transpiled into JavaScript for browser compatibility.
+
+### Benefits of Using JSX
+
+- **Code Compactness**: JSX helps avoid lengthy `React.createElement` calls.
+  
+- **Type Safety**: Modern IDEs provide extensive support for type checking and autocompletion with JSX.
+
+- **Compile-Time Optimizations**: JSX allows for compile-time optimizations, enhancing app performance.
+
+- **Enable Optional Syntax Checks**: For those developing in TypeScript, JSX enables Syntax Checks to ensure code quality.
+
+### Code Example: JSX and Its Transpiled Output
+
+Here is the JSX code
+
+```jsx
+// JSX
+const element = <h1>Hello, World!</h1>;
+```
+
+Here is the equivalent JS code transpiled by Babel:
+
+```javascript
+// Transpiled JS
+const element = React.createElement('h1', null, 'Hello, World!');
+```
+
+### Why Use JSX?
+
+- **Concise Syntax**: JSX provides a succinct, declarative approach to building UIs.
+
+- **Improved Readability**: Its obvious resemblance to HTML promotes code clarity and reduces cognitive load.
+
+- **Static Type Checking**: When used with TypeScript or Flow, JSX brings the benefits of type safety, reducing the probability of runtime errors.
+
+- **Development Efficiency**: By simplifying UI code and providing helpful developer features, JSX accelerates the development process.
+
+- **React Ecosystem Integration**: JSX is the preferred way to write components across the React ecosystem, fostering community best practices.
+<br>
+
+## 6. Can you explain the _virtual DOM_ in _React_?
+
+The **Virtual DOM** is a key concept in React, responsible for its high performance. It efficiently manages the **DOM** setup, minimizes updates, and then syncs them to the actual DOM tree.
+
+### How the Virtual DOM Works
+
+1. **Initial Rendering**: When the application starts, React creates a simplified in-memory representation of the DOM, called the Virtual DOM.
+  
+2. **Tree Comparison**: During each state change, React builds a new Virtual DOM representation. It then compares this updated representation against the previous one to identify what has changed. This process is often called "reconciliation".
+  
+3. **Selective Rendering**: React determines the most minimal set of changes needed to keep the Virtual DOM in sync with the actual DOM. This approach, known as "reconciliation", is a performance booster as it reduces unnecessary updates.
+
+4. **Batched Updates**: React performs the actual DOM updates in a batch, typically during the next animation frame or when no more updates are being made. This batching leads to optimized DOM operations, further enhancing performance.
+
+5. **One-Way Sync**: After the in-memory Virtual DOM and the actual DOM have been reconciled and the necessary updates identified, React syncs these changes in a **one-way** process, from the Virtual DOM to the actual DOM. This approach helps prevent unnecessary visual glitches and performance hits.
+
+6. **Asynchronous** Handling: React schedules state changes, ensuring performance by bundling multiple changes that can be processed together. This aids in avoiding unnecessary Virtual DOM updates and ensures efficient tree comparisons.
+
+7. **Preventing Direct DOM Manipulation**: React applications typically avoid manual DOM manipulation. Instead, all changes are made through React, which then uses its Virtual DOM mechanism to batch and apply these changes to the actual DOM.
+
+8. **Support for Cross-Platform Environments**: The Virtual DOM gives sturdy cross-platform capabilities, enabling consistent and optimized performance irrespective of the underlying operating system or hardware.
+
+React's Virtual DOM is primarily powered through its component architecture and extensive use of JavaScript, fundamentally changing how web applications are built and perform. Its virtuous efficiency is a testament to React's prowess as a leading front-end framework and contributes to the seamless user experiences React applications are known for providing.
+<br>
+
+## 7. What are the differences between a _class component_ and a _functional component_?
+
+Let's look at the various aspects and differences between **Class Components** and **Functional Components**.
+
+### Core Distinctions
+
+**Class Components**:
+
+- Utilize the `class` keyword for component definition.
+- Can have state management.
+- Allow lifecycle methods.
+- Are typically verbose.
+
+**Functional Components**:
+
+- Defined using ES6 functions.
+- Lack inherent state or lifecycle management.
+- Primarily used for UI representation.
+- Introduced `Hooks` in **React 16.8** for state and lifecycle control.
+
+### Detail Evaluation
+
+#### Code Structure
+
+**Class Components**:
+
+- Consists of a `render()` method.
+- Can incorporate other methods for state updates and lifecycle management.
+
+**Functional Components**:
+
+- Evolved with introduction of React hooks.
+- `useState()` and `useEffect()` for state and lifecycle management respectively.
+
+#### Purpose and Use-Cases
+
+**Class Components**:
+
+- Suitable for more complex components.
+- May be necessary in older codebases.
+- Gradually being replaced by hooks and functional components.
+
+**Functional Components**:
+
+- Focused on UI without managing state.
+- Introduced hooks to handle state and lifecycle methods.
+
+#### Editable State
+
+**Class Components**:
+
+- Use `this.state` and `this.setState()` to manage state.
+- Useful when state contains complex data types.
+
+**Functional Components**:
+
+- Implement `useState` hook to enable state management in functions.
+- Introduced for state management in functional components, simplifying state handling.
+
+#### Lifecycle Methods
+
+**Class Components**:
+
+- Offer a wide range of lifecycle methods.
+- Example methods include `componentDidMount` and `componentWillUnmount`.
+
+**Functional Components**:
+
+- Limited lifecycle management before the introduction of hooks.
+- Use `useEffect()` to handle actions based on state and props changes. 
+
+#### Context API and Redux Usage
+
+**Class Components**:
+
+- Can easily be paired with both Context API and Redux.
+- Typically used with render props.
+
+**Functional Components**:
+
+- With hooks like `useContext`, have become proficient in handling shared state.
+- Can now be seamlessly integrated with newer global state management libraries like Redux.
+
+### Adoption and Transition
+
+- Initial React versions were heavily reliant on class components.
+- **Hooks'** introduction in **React 16.8** facilitated the shift towards fully functional components.
+- While gradual migration from class to functional is encouraged because of performance benefits, both paradigms can still coexist.
+
+### Key Takeaways
+
+- **Class Components**:
+  - Traditional class-based components.
+  - Prefers `this` context.
+  - Houses extensive lifecycle methods.
+  - Stands as a more elaborate and structured option.
+
+- **Functional Components**:
+  - Evolved to include hooks for state management.
+  - Favored for their simplicity and ease of reusability.
+  - Perfect for simpler, stateless components.
+<br>
+
+## 8. How do you handle _events_ in _React_?
+
+**React** simplifies the process of managing and handling events through its use of **synthetic events**.
+
+### Handling Events in React
+
+#### Synthetic Events
+
+React **abstracts browser events** into what are known as *synthetic events*. This ensures a consistent interface across different browsers.
+
+#### Event Subscription
+
+- When handling events, **React behaves consistently** across all elements, not just form elements.
+
+- React events use _camelCase_, unlike HTML, which is helpful for both **consistency and avoiding reserved words in JavaScript**.
+
+- Use **boolean attributes** in JSX for default browser events.
+
+#### Special Event Handling
+
+React provides _special interfaces_ for certain types of events: input components benefit from the `value` attribute, while media components make use of `src` or other similar attributes specific to their type.
+
+
+
+### Code Example: Event Handling
+
+Here is the JavaScript code:
+
+```javascript
+import React from 'react';
+
+class Form extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: '' };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+<br>
+
+## 9. What are _state_ and _props_ in _React_?
+
+In React, **props** and **state** are both used to propagate and manage data. However, they have different roles and management patterns.
+
+### Role & Life Cycle
+
+- **Props (short for "properties")** are used **to pass data from a parent component to a child** one. Once passed, props in the child component are read-only and can't be directly modified by the child.
+
+- **State** is used to manage data within a component, and is mutable. Any changes to state values trigger a component re-render.
+
+### When to Use 
+
+- **Props** are for data that does not change within the component and is provided by a parent.
+- **State** is for data that does change within the component and is managed by that component itself.
+
+### Management
+
+- When a component receives new props, React will merge them with any existing state. However, it won't override state values unless you explicitly set them.
+  
+- Since React re-renders the entire component when you update state, it's important to be efficient in state management. Tools like `useMemo` or `shouldComponentUpdate` can help optimize re-renders.
+
+### Unifying with Hooks
+
+- The `useState` hook (along with other hooks like `useEffect`) allows functional components to manage state, bringing them closer in capability to class components.
+  
+- Prior to the introduction of hooks in React 16.8, state was the exclusive domain of class components. But now, both state and its associated lifecycle hooks belong to **functional components** as well.
+
+### Code Example: State and Props Management
+
+Here is the JavaScript code:
+
+```javascript
+import React, { useState } from 'react';
+
+// Button Component
+const Button = ({ text, color }) => {
+  return <button style={{background: color}}>{text}</button>;
+};
+
+// ColorPicker Component
+const ColorPicker = () => {
+  const [color, setColor] = useState('blue');
+
+  const changeColor = (newColor) => {
+    setColor(newColor);
+  };
+
+  return (
+    <div>
+      <Button text="Red" color="red" onClick={() => changeColor('red')} />
+      <Button text="Blue" color="blue" onClick={() => changeColor('blue')} />
+      <Button text="Green" color="green" onClick={() => changeColor('green')} />
+    </div>
+  );
+};
+
+// App Component
+const App = () => {
+  return <ColorPicker />;
+};
+```
+<br>
+
+## 10. How do you pass _data_ between _components_ in _React_?
+
+**Data propagation** in React components primarily relies on two mechanisms:
+
+- **Props**: For unidirectional data flow, parent components pass data to their children via props.
+  
+- **Callback Functions**: Data moves up the tree when children invoke specific functions passed down from their parents.
+
+Let's have a look at the best-practices for these two mechanisms.
+
+### Using Props
+
+  - **Role**: Primarily used for one-way data flow. The parent furnishes the child with props that the child component can neither alter nor reassign.
+  
+  - **Best Practices**:
+    - Leverage props for read-only data in child components.
+    - Rerender the child component, if necessary, when the prop values change.
+
+  - **Code Example: Read-Only Checkbox**:
+
+  Your task is to write the full code for the React Application to demonstrate passing data to child components using props.
+
+### Children Built With Props
+
+In this code example, `App` maintains the `optionSelected` state that it shares with the `DropDown` and `SelectedOption` components. `DropDown` uses the `optionSelected` state to determine which option was picked, shared with `SelectedOption` to display it.
+
+```tsx
+// src/components/DropDown.tsx
+interface DropDownProps {
+  options: string[]
+}
+
+const DropDown: React.FC<DropDownProps> = ({ options }) => {
+  const [selected, setSelected] = React.useState(0);
+
+  return (
+    <div>
+      <div>Options:</div>
+      {options.map((opt, index) => (
+        <button key={index} onClick={() => setSelected(index)}>{opt}</button>
+      )}
+      <SelectedOption option={options[selected]} />
+    </div>
+  );
+};
+
+// src/components/SelectedOption.tsx
+interface SelectedOptionProps {
+  option: string
+}
+
+const SelectedOption: React.FC<SelectedOptionProps> = ({ option }) => {
+  return <div>You selected: {option}</div>;
+};
+
+// src/App.tsx
+const App: React.FC = () => {
+  const options = ['Apple', 'Banana', 'Cherry'];
+  return <DropDown options={options} />;
+};
+
+export default App;
+```
+<br>
+
+## 11. What is a _stateful component_?
+
+**Stateful components** in React are fueled by internal states, allowing them to adapt to user interactions and data changes.
+
+By invoking `this.setState()`, components update their state, triggering a re-render and ensuring the UI and state are in sync.
+
+### When to Use
+
+- **Dynamic Interactions**: For components that require dynamic updates, such as a counter that increments on every click.
+  
+- **User Input Handling**: Useful for capturing and validating user inputs in forms.
+
+- **Data Fetching**: To manage and display data obtained from API calls.
+
+### Code Example: Stateful Component
+
+Here is the JavaScript code:
+
+```jsx
+import React, { Component } from 'react';
+
+class ClickCounter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  handleIncrement = () => {
+    this.setState(prevState => ({ count: prevState.count + 1 }));
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.handleIncrement}>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default ClickCounter;
+```
+<br>
+
+## 12. Can you explain how _useState_ works?
+
+**`useState`** is a built-in **React Hook** that empowers components to preserve stateful values. It amalgamates a stateful value with a state-modifying function, enabling direct manipulation.
+
+**Hooks** are utility functions that enable you to manage state, side effects, and other React features in **function components**.
+
+### Core Components of `useState`
+
+1. **Stateful Value**: The first element in the tuple returned by `useState` carries the current state, like any other state in React.
+
+2. **Setter Function**: The second element is a function that determines the state's new value. Upon invocation, it imparts this new state to the component, just as `setState` does in classes.
+
+Given `value` as the stateful value and `setValue` as the setter function, calling `setValue(newValue)` will alter `value` to `newValue`.
+
+### Behavioral Traits of `useState`
+
+- **Lazy Initialization**: If the stateful value necessitates a computationally intensive or time-consuming setup, employing `useState` ensures that this setup occurs exclusively when the component is first rendered rather than on every update.
+
+- **Referential Integrity**: If you employ the `useState` Hook at distinct spots within a component or even dissimilar components, React guarantees that each endeavor manages its unique state underlying value, akin to using `this.state` in classes.
+
+### Code Example: useState
+
+Here is the React Component:
+
+```jsx
+import React, { useState } from 'react';
+
+const Counter = () => {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+};
+```
+<br>
+
+## 13. How do you update the _state_ of a _parent component_ from a _child component_?
+
+**React** encourages **unidirectional data flow**, primarily passing data from parent to child. However, occasional need arises to update parent state from a child component. This can be facilitated using specific patterns and techniques.
+
+### Primary Methods
+
+1. **Props Callback**: Pass a function `onStateChange` as a prop which the child can call to update parent state.
+  
+2. **Context API**: Use `Context` to make state accessible and modifiable from descendant components.
+
+### Advanced Techniques
+
+1. **UseRef and ForwardRef**: Utilize `useRef` and `forwardRef` to get a reference to a child component, allowing you to directly manipulate its properties.
+
+2. **Global State Management**: Implement a global state management solution like Redux or MobX if state changes are pervasive.  
+
+3. **Data Services**: Use a service to manage shared state, which can be updated and read by different components.
+
+### Code Example: State Management
+
+Here is the React Component:
+
+```jsx
+// App.js - Parent component
+import React, { useState } from 'react';
+import Child from './Child';
+
+function Parent() {
+  const [state, setState] = useState('');
+
+  const updateState = (newState) => {
+    setState(newState);
+  };
+
+  return <Child updateParentState={updateState} />;
+}
+```
+
+```jsx
+// Child.js - Child component
+import React from 'react';
+
+function Child({ updateParentState }) {
+  const handleClick = () => {
+    updateParentState('New state from child!');
+  };
+
+  return <button onClick={handleClick}>Update Parent</button>;
+}
+```
+
+In this example, the `Parent` component maintains the state, which is updated via the function `updateState` passed as a prop to `Child`. When a button inside `Child` is clicked, the `updateParentState` function updates the parent state.
+<br>
+
+## 14. What is _lifting state up_ in _React_?
+
+**Lifting State Up** in React entails managing state in parent components to propagate it to multiple children, typically to ensure synchronization or data flow.
+
+### Why Use Lifting State Up?
+
+- **Consistent Data**: Prevents inconsistencies in related data scattered across components.
+- **Easier Data Modifications**: Minimizes complexity when updating shared data, especially with complex data structures or numerous children.
+
+### Core Mechanism: Props
+
+React components communicate using `props`, where child components receive data from parents. During **lifting state up**, the parent maintains the state and passes down relevant data as props.
+
+### Lifting State Up in Code
+
+Here is the React code:
+
+#### Parent Component: RectangleAreaCalculator
+
+```jsx
+class RectangleAreaCalculator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+  }
+
+  render() {
+    return (
+      <div>
+        <ShapeInput
+          type="number"
+          label="Width"
+          value={this.state.width}
+          onChange={(e) => this.setState({ width: e.target.value })}
+        />
+        <ShapeInput
+          type="number"
+          label="Height"
+          value={this.state.height}
+          onChange={(e) => this.setState({ height: e.target.value })}
+        />
+        <ShapeArea area={this.state.width * this.state.height} />
+      </div>
+    );
+  }
+}
+```
+
+#### Child Components: ShapeInput and ShapeArea
+
+```jsx
+const ShapeInput = ({ type, label, value, onChange }) => (
+  <div>
+    <label>{label}</label>
+    <input type={type} value={value} onChange={onChange} />
+  </div>
+);
+
+const ShapeArea = ({ area }) => <div>Area: {area}</div>;
+```
+
+In this example, the `RectangleAreaCalculator` maintains the `width` and `height` state and passes them as props to the `ShapeInput` components. The `ShapeArea` component calculates the area and receives `width` and `height` as props, keeping its state logic-free.
+
+### Advantages
+
+- **Single Source of Truth**: Shared data lives in the parent, reducing complexities stemming from data redundancy or inconsistencies.
+- **Predictable Data Flow**: Changes to the data layer (parent) trigger updates to all its children. This helps in maintaining the coding standards and data integrity.
+
+### Most Common Implementations
+
+- **Form State**: Centralizes form data management in one place, simplifying form submissions or data validation.
+- **Shared Logic**: Multiple components using the same data or functionality can benefit from centralized state management.
+
+### When It's Overkill
+
+For small-scale apps or in situations with data that lacks a clear **source of "truth"**, the technique might introduce unnecessary complexity.
+
+Aiming for a balance between centralized and localized state management is key, and React provides tools like `useContext` and `useState` that cater to both requirements.
+<br>
+
+## 15. When do you use _Redux_ or _Context API_ for state management?
+
+**Redux** and the **Context API** serve as tools for managing state in large React applications. Here are situations which might call for one or the other, or even both:
+
+### Advantages of Redux
+
+1. **Full App Coverage**: Redux operates on a global state, enabling consistent app behavior and simplifying state transitions across components.
+
+2. **Predictable State Changes**: Changes in Redux follow a strict flow, optimizing teamwork and troubleshooting.
+
+3. **Time Travel**: Redux devtools allow for easy time travel, aiding in bug detection and state history visualization.
+
+4. **Performance Optimization**: With its selective rendering feature, `connect` from `react-redux` ensures only the required components are updated, thus mitigating wasteful renders.
+
+5. **Optimal for Bigger Apps**:
+
+   - Reduces the need for props drilling.
+   - Offers a centralized point for state changes.
+
+### When to Pick Redux
+
+- **Large Apps with Complex State**: Ideal for apps with intensive state requirements and a multitude of components.
+
+- **Frequent Inter-Component Communications**: When different sections of your application need to exchange data often, a central store, such as Redux, can streamline this process.
+
+### Advantages of Context API
+
+
+   
+1. **Simplicity**: The Context API is built into React and is more straightforward to set up, making it a more convenient choice for simpler state needs.
+
+2. **Single Point of Configuration**: Context API allows for a centralized point of configuration for state, similar to Redux.
+
+3. **Easier to Understand for Smaller Apps**: It's less intensive and thus, is easier to explain and understand, especially for junior developers or in smaller teams.
+
+### When to Pick Context API
+
+- **When No Nested Components**: Great for smaller applications or ones with minimal nesting of components, eliminating the need to prop-drill or create additional HOCs or render-props to share state.
+
+- **For App-Wide Configurations**: It's useful for handling global configurations, such as themes or user authentication.
+
+- **Newer React Projects Involving Hooks**: Since the Context API underwent significant improvements with the introduction of Hooks, it's an appealing choice for new projects.
+<br>
+
+
+
+#### Explore all 100 answers here 👉 [Devinterview.io - React](https://devinterview.io/questions/web-and-mobile-development/react-interview-questions)
+
+<br>
+
+<a href="https://devinterview.io/questions/web-and-mobile-development/">
+<img src="https://firebasestorage.googleapis.com/v0/b/dev-stack-app.appspot.com/o/github-blog-img%2Fweb-and-mobile-development-github-img.jpg?alt=media&token=1b5eeecc-c9fb-49f5-9e03-50cf2e309555" alt="web-and-mobile-development" width="100%">
+</a>
+</p>
+
