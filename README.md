@@ -13,868 +13,788 @@
 
 ## 1. What is _React_ and why is it used?
 
-**React** is an open-source, front-end JavaScript library for building user interfaces, that focuses on reusable components and virtual DOM for performance.
+### React: Modern Definition (2026)
 
-### Core Concepts
+**React** is a declarative, component-based library for building user interfaces. As of 2026, it is governed by the **React 19+** paradigm, emphasizing **Concurrent Rendering**, **Server Components**, and **Actions**.
 
-#### Virtual DOM
+---
 
-**React's Virtual DOM** is a lightweight in-memory representation of the actual DOM elements. When changes occur, React compares the current Virtual DOM with a shadow copy and efficiently updates only the changed portions in the real DOM.
+### Core Architectural Concepts
 
-This mechanism significantly reduces expensive direct DOM manipulations, resulting in improved performance and responsiveness in web applications.
+#### Concurrent Rendering & Virtual DOM
+While React still utilizes a Virtual DOM for reconciliation, the 2026 standard emphasizes **Concurrent React**. This allows React to prepare multiple versions of the UI simultaneously without blocking the main thread. By prioritizing updates (e.g., input typing over data fetching), React achieves better responsiveness. The diffing algorithm maintains $O(n)$ complexity through heuristic assumptions, optimized for modern browser engines.
 
-#### Components
+#### Functional Components & Hooks (The Standard)
+**Class Components are effectively legacy.** Modern development exclusively uses **Functional Components**.
+*   **Hooks:** The standard mechanism for state (`useState`), side effects (`useEffect`), and memoization (`useMemo`, `useCallback`).
+*   **React 19 Features:** The introduction of the `use` hook and automatic transitions has replaced much of the boilerplate previously required for data fetching.
 
-**React Components** encapsulate both the visual and the corresponding logic. They can be either classes or pure functions. This modular architecture and the ability to nest and reuse components make React a powerful UI toolkit.
+#### Server Components (RSC)
+The architectural divide between **Client Components** and **Server Components** is fundamental. Server Components execute exclusively on the server, sending rendered UI to the client. This reduces bundle size significantly, as component-level logic and dependencies remain on the server, shipping zero-kilobyte JavaScript to the browser for static portions of the UI.
 
-Components are broken down into two main types:
+#### Unidirectional Data-Flow & Server Actions
+Data remains strictly one-way (parent-to-child). However, **Server Actions** have replaced the traditional pattern of fetching data via `useEffect` + `useState`. Actions allow you to call server-side functions directly from UI elements (e.g., forms), integrating mutation logic directly into the component lifecycle.
 
-1. **Class Components:** These are ES6 classes that can hold state and offer lifecycle methods.
-2. **Functional Components:** Primarily plain JavaScript functions: until the advent of "hooks," they couldn't maintain states.
+#### JSX: Transpilation to React Elements
+**JSX** remains the syntax extension for JavaScript. In modern build tools (e.g., Vite, Rspack), JSX is transformed into `_jsx` runtime calls, optimized for the specific rendering target (Client vs. Server).
 
-Key changes, starting from React 16.8:
+---
 
-- Introduction of new hooks API expanded state-management to functional components
-- Popular hooks include `useState` for state management and `useEffect` for lifecycle management.
+### Why use React in 2026?
 
-Beyond this foundational structure, hooks offer extensive state, lifecycle, and context APIs, making functional components powerful building blocks.
+*   **Server-Side First:** Modern frameworks (e.g., Next.js, Remix) built on React leverage **React Server Components (RSC)** for superior SEO and performance metrics.
+*   **Declarative UI:** By defining UI as a function of state ($UI = f(state)$), React simplifies state transitions and ensures predictable rendering.
+*   **The Ecosystem:** 2026 React is part of a massive ecosystem including **TanStack** (Query/Router), **Zustand** (State), and **Tailwind CSS**, providing a standardized path for enterprise-grade scalability.
+*   **Type Safety:** First-class support for **TypeScript** is now the baseline. Prop definitions and state types are strictly enforced during the build process, minimizing runtime errors.
 
-#### Unidirectional Data-flow
+---
 
-React mandates a **one-way** data flow, empowering developers to understand and manage data propagation more effectively. This simplifies tracking, debugging, and validating data changes across the application.
+### Modern Code Example (React 19+)
 
-While sibling components can communicate indirectly through shared parent components, direct communication among sibling components is typically discouraged.
-
-#### JSX: Syntactic Sugar
-
-**JSX** empowers developers by offering a more intuitive, HTML-like syntax for embedding JavaScript expressions. This marriage of UI and logic not only renders extensive possibilities but also promotes code organization and readability.
-
-### Why use React?
-
-#### Declarative Programming Paradigm 
-
-React enables a **declarative style** of programming: developers define the interface's desired state, and React ensures the DOM reflects that state. This approach is more intuitive and helps in designing clear, maintainable code.
-
-#### Strong Community Backing and Ecosystem
-
-React has been gaining momentum with an enthusiastic community regularly contributing new solutions, updates, and robust third-party libraries. The supportive ecosystem extends to comprehensive toolsets for better development and debugging (like React DevTools).
-
-#### Reusability and Composability
-
-React's architecture is built on **reusable components**, fostering modular, consistent UI elements and logic that can be redeployed across projects or shared with others.
-
-#### Performance Optimization
-
-The Virtual DOM serves as a powerful performance amplifier, and features like providing keys to iterated lists ensure efficient and targeted DOM updates. React is also capable of server-side rendering, bolstering app speed and SEO-friendliness.
-
-#### Effective Data Management
-
-For application-wide state management, React provides **Context API** and libraries like Redux. Meanwhile, local state management with hooks like `useState` streamlines state handling within components.
-
-### Code Example: Functional vs Class-Based Components
-
-Here is the React code:
+The following snippet demonstrates the shift toward `useActionState` and modern functional patterns, replacing legacy class-based state management.
 
 ```jsx
-// Functional Component with useState hook
-import React, { useState } from 'react';
+'use client'; // Required for interactivity in RSC environments
 
-export default function Button() {
-  const [count, setCount] = useState(0);
+import { useActionState } from 'react';
+
+// Modern approach: Server Actions integration
+async function incrementCounter(previousState, formData) {
+  return previousState + 1;
+}
+
+export default function Counter() {
+  const [state, action, isPending] = useActionState(incrementCounter, 0);
+
   return (
-    <button onClick={() => setCount(count + 1)}>
-      Clicked {count} times
-    </button>
+    <form action={action}>
+      <button type="submit" disabled={isPending}>
+        Clicked {state} times
+      </button>
+    </form>
   );
 }
-
-// Class-based Component
-import React, { Component } from 'react';
-
-export default class Button extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { count: 0 };
-  }
-
-  render() {
-    return (
-      <button onClick={() => this.setState({ count: this.state.count + 1 })}>
-        Clicked {this.state.count} times
-      </button>
-    );
-  }
-}
 ```
+
+**Audit Note:** The Class-based component example in the original content is now considered an anti-pattern. New projects must utilize functional patterns to leverage **Suspense** and **Streaming SSR** capabilities inherent in the modern React pipeline.
 <br>
 
 ## 2. How is _React_ different from _Angular_ or _Vue_?
 
-When comparing **React, Angular, and Vue.js**, a few key differentiators stand out.
-
-### Core Philosophy
-
-- **React**: Focuses on UI components. You need other libraries for state management, routing, etc.
-- **Angular**: Provides a more comprehensive solution out of the box, often called "batteries included."
-- **Vue.js**: A good balance of providing core libraries and flexibility for integration with third-party tools.
+### Architectural Paradigm
+*   **React (19)**: A **library** for building user interfaces using a **Causal Decoder-only** conceptual model for rendering. It emphasizes **functional programming** paradigms via Hooks and the **React Compiler** (automatic memoization).
+*   **Angular (v19+)**: A **platform** utilizing a **Signals-based** reactivity system (replacing legacy `Zone.js` change detection). It mandates a strict **Dependency Injection** architecture.
+*   **Vue.js (3.x/4)**: A **progressive framework** utilizing a **Proxy-based** reactivity system. It bridges the gap between React’s composability and Angular’s template-first DX.
 
 ### Learning Curve
+*   **React**: Steepened in 2026 due to the required mastery of **Server Components (RSC)**, **Suspense**, and the transition to native asynchronous patterns.
+*   **Angular**: Flattened by **Standalone Components**, removing the necessity for `NgModules` which previously burdened beginners.
+*   **Vue.js**: Remains the most accessible due to the **Composition API** and its similarity to standard Web Components.
 
-- **React**: Initially simpler to learn due to its focused nature, but can become complex as you add more external libraries.
-- **Angular**: Steeper learning curve because of its complete ecosystem, including modules, services, and complex directives.
-- **Vue.js**: Known for its gentle learning curve and clear, concise documentation.
+### Performance & Rendering
+*   **React**: Shifted toward **Server-Side Rendering (SSR)** and **Partial Hydration**. Complexity of re-renders: $O(n)$ where $n$ is the number of component nodes; optimized via the **React Compiler** to minimize unnecessary diffing.
+*   **Angular**: The **Signals** API allows for granular updates ($O(1)$ component updates) by tracking state dependencies directly rather than diffing the entire component tree.
+*   **Vue.js**: Highly performant through **Virtual DOM** combined with **Static Hoisting** and **Patch Flags**, allowing the compiler to optimize dynamic content patching at $O(m)$ where $m$ is the number of dynamic nodes.
 
-### Community and Ecosystem
+### State Management
+*   **React**: Canonical approach is **Server Actions** and **React Query (TanStack)** for server state; **Zustand** or **Context** for client state. `setState` is effectively superseded by `useActionState` and `useOptimistic` hooks.
+*   **Angular**: **RxJS** is now optional in favor of **Signals**, which provide a more ergonomic, imperative-like syntax for reactive state without the complexity of streams.
+*   **Vue.js**: **Pinia** is the official standard, replacing Vuex. It is built natively for **TypeScript** and provides a modular, lightweight store architecture.
 
-- **React**: Enjoys an enormous community, and users can pick and choose from a vast array of third-party libraries to complement its core features.
-- **Angular**: Boasts a comprehensive ecosystem that's well-managed by its developers and is known for its enterprise support.
-- **Vue.js**: While the newest of these frameworks, it has been growing rapidly, with a dedicated team and a flourishing community.
+### Templating & Composition
+*   **React**: **JSX** remains the industry standard. The trend is moving toward **Server Components**, where logic and UI are unified to reduce client-side bundle size.
+*   **Angular**: Uses **Template Syntax** with structural directives. The recent introduction of **Control Flow** (`@if`, `@for`) has replaced `*ngIf` and `*ngFor` for better type safety and performance.
+*   **Vue.js**: **Single-File Components (SFCs)** using `<script setup>` syntax are the industry best practice, offering the tightest integration between template logic and reactive state.
 
-### Performance
-
-- **React**: Focuses on efficient rendering and offers built-in tools for performance optimization.
-- **Angular**: Optimizes performance through features like Ahead-Of-Time (AOT) compilation and Zone.js, which prevents unnecessary digest cycles.
-- **Vue.js**: Also optimized for performance, with a small bundle size and features like lazy-loading components.
-
-### Official State Management
-
-- **React**: Employs component state (with `setState`) and also external state management libraries like **Redux**, **MobX**, and the newer **Context API**.
-- **Angular**: Primarily uses services and **RxJS** for more structured reactive state management.
-- **Vue.js**: Offers Vuex, a state management pattern and library dedicated to Vue applications.
-
-### Language Support
-
-- **React**: Developed with **JavaScript** and its supersets (**JSX** and **TypeScript**) in mind.
-- **Angular**: Primarily designed for **TypeScript** but supports JavaScript and Dart as well.
-- **Vue.js**: Offers support for both **JavaScript** and **TypeScript**.
-
-### Templating Approach
-
-- **React**: Utilizes JSX, which combines HTML and JS within JavaScript files. It offers a more concise approach and closely intertwines HTML with JS logic.
-- **Angular**: Has a complete separation of concerns with TypeScript, HTML, and CSS in separate files.
-- **Vue.js**: Allows for both **single-file components** (SFCs) that encapsulate HTML, JavaScript, and CSS, as well as the traditional trio of separate files.
-
-### Language Server Support
-
-- **React**: Known for limited tooling support due to *runtime-oriented* nature, but effective tooling is available for **TypeScript** and **Flow**.
-- **Angular**: Offers full **TypeScript** support with features like auto-completion, refactoring, and more, thanks to its built-in language service.
-- **Vue.js**: Supports comprehensive programming features, including type verification, integrated debugging, and intelligent code suggestions.
+### Tooling & Language Support
+*   **React**: **TypeScript** is ubiquitous. Tooling is highly dependent on the meta-framework (e.g., **Next.js** or **Remix**), which manages the LSP and build pipeline.
+*   **Angular**: **Angular Language Service** remains the gold standard for enterprise-grade IDE support, providing deep type-checking across templates and controllers.
+*   **Vue.js**: **Volar (Vue Language Tools)** provides best-in-class support for TypeScript inference within SFCs, often outperforming JSX-based tooling in template type-checking precision.
 <br>
 
 ## 3. What is a _React component_?
 
-A **React component** represents a modular, reusable piece of the user interface. It can encapsulate both **visual elements** (rendered in the Virtual DOM) and **application logic**. React components come in two primary forms: **function components** and **class components**.
+### React Component Definition (2026 Standard)
 
-### Function vs. Class Components
+A **React component** is the fundamental building block of modern React applications, encapsulating UI logic and structure. In the current ecosystem (React 19+), components are defined as **function components**. While class components remain technically supported for legacy compatibility, they are considered **deprecated architectural patterns** in favor of functional paradigms.
 
-- **Function Components**: These are stateless, simpler to read, and ideally used for small, specialized UI elements known as 'dumb' components. They are pure functions, perceptually faster because of fewer checks. 
+#### Function Components vs. Legacy Class Components
 
-- **Class Components**: These can maintain state and expose more advanced features like lifecycle methods. However, the introduction of hooks to function components in React 16.8 technically made state management possible without classes.
+*   **Function Components**: The industry standard. These are JavaScript functions that accept `props` as an argument and return UI elements. They leverage **Hooks** to manage state, context, and side effects.
+*   **Class Components**: Legacy structures that use ES6 classes extending `React.Component`. These are now discouraged due to increased bundle sizes and complexities regarding `this` binding and lifecycle fragmentation.
 
-### JSX and `render()`
+#### JSX and Modern Rendering
 
-React components generally use JSX (an XML-like syntax) to describe the UI and a `render()` method to define the **visual makeup**.
+*   **JSX**: A syntax extension to JavaScript that allows UI markup to be written within code. As of React 19, the `React.createElement` transformation is largely optimized by modern compilers (like SWC or Babel), transpiling JSX directly into highly performant virtual DOM nodes.
+*   **Server Components (RSC)**: The 2026 standard dictates that components are now differentiated by their execution environment. **Server Components** run exclusively on the server, reducing client-side bundle size, while **Client Components** handle interactivity via hooks.
 
-- **JSX**: This "syntactic sugar" streamlines component building. It is converted into standard JavaScript calls. Babel is often used to compile this code.
-- **`render()`**: Required for class components, it tells React what the component's output should be when rendered.
+#### Structural Coherence
 
-### Structural Coherence
+React applications maintain a **hierarchical tree structure**. The entry point (e.g., `createRoot`) initiates the tree, which propagates updates through **Concurrent Rendering**. This allows React to prioritize urgent updates (like user input) over transitionary background tasks, improving perceived performance.
 
-Components in React link together, forming a tree structure. A **root component** is the entry point, and from there, it houses other components. 
+#### Data Flow and State Management
 
-### Data Flow
+React enforces **unidirectional data flow**. Data (props) flows strictly from parent to child. 
 
-React follows a **unidirectional data flow**. This means data moves from the top of the component tree (parent) down to leaves (children) through component **props**. Changes are signaled back up the tree via **callbacks**.
+*   **Props**: Immutable data passed down the component tree.
+*   **State**: Reactive data managed via `useState` or `useReducer`. In modern React, state updates trigger a **re-render cycle** where React computes the "diff" between the previous and current Virtual DOM, applying only necessary patches ($O(n)$ complexity).
+*   **State Synchronization**: Modern state management often moves beyond simple `props` drilling, utilizing `useContext` or external reactive stores (e.g., Zustand, TanStack Query) to facilitate cross-tree data access without performance bottlenecks.
 
-### State and Props
+#### Lifecycle Operations: The Hook Paradigm
 
-Both function and class components can receive data via two main routes:
+Lifecycle methods (`componentDidMount`, etc.) have been superseded by the `useEffect` hook and the broader **Effect API**. 
 
-- **Props**: Short for properties, these are akin to function arguments and are immutable. They're the mechanism for parent-child data transfer.
-- **State**: This is functionally the component's "memory" and is mutable. Components keep track of their state and re-render upon state change.
+*   **Declarative Synchronization**: Instead of imperative lifecycle hooks, modern components synchronize with external systems using declarative dependencies.
+*   **Suspense & Transitions**: React 19+ handles "loading" states and complex data fetching via `<Suspense>` boundaries. Rather than manually managing "mounting" status, components define their loading state declaratively, leading to a smoother user experience in data-intensive applications. 
 
-### Lifecycle Operations
-
-Class components support a series of **lifecycle methods**. These can be used to run code at specific points in the component's lifecycle, such as upon mounting (creation), updating, or unmounting (removal).
-
-Custom classes and the lifecycle methods within were the primary mechanism for side effects earlier in React. While class-based components aren't as central to the framework with the advent of hooks, they're still relevant and in use, especially when using versions < 16.8.1 and realizing the components' lifecycle patterns in codebases.
+**Architectural Note**: As of 2026, the focus has shifted from "lifecycle management" to "synchronization with external state," prioritizing **Composition** over the inheritance models used in older class-based designs.
 <br>
 
 ## 4. How do you create a _component_ in _React_?
 
-Creating a React component involves defining its structure, behavior, and sometimes lifecycle methods for dynamic updates. Components can be **functional** or **class-based**.
+### Component Architecture in React (2026 Standards)
 
-### Code Example
+Modern React development strictly prioritizes **Functional Components** using **Hooks**. While Class-based components remain supported for legacy compatibility, they are considered an anti-pattern in new feature development due to higher memory overhead and complex `this` binding behaviors.
 
-Here's a  **Class-based** component:
+### Modern Implementation
 
-```jsx
-import React, { Component } from 'react';
+Functional components leverage **Hooks** (e.g., `useState`, `useEffect`) to manage state and side effects, replacing the legacy lifecycle methods (`componentDidMount`, `componentWillUnmount`).
 
-class Greeting extends Component {
-  render() {
-    return <h1>Hello, {this.props.name}!</h1>;
-  }
-}
-```
-
-And here's a **Functional** one:
+#### Functional Component Example (React 19+)
 
 ```jsx
-import React from 'react';
+// React 19 no longer requires explicit 'import React' for JSX
+const Greeting = ({ name }: { name: string }) => {
+  return <h1>Hello, {name}!</h1>;
+};
 
-const Greeting = ({ name }) => <h1>Hello, {name}!</h1>;
+export default Greeting;
 ```
 
-Both examples showcase a basic greeting component that takes in a prop `name` and displays a greeting message.
+*Note: The use of **TypeScript** is the industry standard for 2026, providing static type checking for props and return types.*
 
-#### Linters and JSX
-Many modern text editors and IDEs support JSX and JavaScript syntax, especially when integrated with linters like ESLint. This setup provides real-time feedback on errors and formatting issues.
+### Modern State and Lifecycle Management
 
-#### Code Styling with AirBNB and Prettier
-It's common to see code bases following the **Airbnb** style guide, often coupled with **Prettier** for consistent and automated code formatting.
+In 2026, the industry has transitioned away from manual lifecycle management toward declarative synchronization. 
 
-In the context of component creation, these standards can dictate whether to use single or double quotes for JSX attributes and the method for defining components.
+1.  **Hooks**: Logic is encapsulated in custom hooks, increasing **reusability** and **testability** compared to class methods.
+2.  **Server Components**: For performance optimization, components can now execute on the server, reducing the client-side JavaScript bundle size.
+3.  **Concurrency**: React 19 features, such as `useTransition` and `useActionState`, allow for non-blocking UI transitions and seamless form state management.
 
-### Key Takeaways
+### Development Standards: Linting and Formatting
 
-- JSX offers a natural, HTML-like syntax for building components in React.
-- Components can be function-based or class-based.
-- Use modern editing tools and linters for improved code consistency and spotting potential issues in real-time.
+Modern ecosystems rely on **ESLint (Flat Config)** and **Biome** or **Prettier** to enforce code quality.
+
+*   **TypeScript Integration**: Strict mode is mandated to ensure type safety, reducing runtime errors.
+*   **Component Composition**: Architecture patterns favor **Composition over Inheritance**. Complex behaviors are abstracted into reusable Hooks rather than High-Order Components (HOCs) or Render Props.
+*   **Modern Formatting**: The Airbnb style guide has largely been superseded by community-driven standards that emphasize **readability** and **zero-config** setups (e.g., Vite/Turbopack ecosystems).
+
+### Technical Audit Summary
+
+| Feature | Legacy Status | 2026 Standard |
+| :--- | :--- | :--- |
+| **Component Type** | Class-based | Functional (Hooks) |
+| **Type Checking** | PropTypes | TypeScript (Interface/Types) |
+| **Data Fetching** | `componentDidMount` | `use` API / TanStack Query |
+| **Rendering** | Client-Side (CSR) | Server Components (RSC) / Streaming |
+
+#### Key Takeaways
+
+*   **Functional Components** are the standard; avoid classes in new architecture.
+*   **TypeScript** is essential for maintaining large-scale codebases.
+*   **Composition** is the primary mechanism for logic reuse; prioritize Custom Hooks.
+*   **Performance** is optimized via Server Components and concurrent rendering features.
 <br>
 
 ## 5. What is _JSX_ and why do we use it in _React_?
 
-**JSX** is a powerful JavaScript Extension that enables the seamless integration of HTML-like structures within React. Notably, it allows for a more **intuitive** component declaration and enhanced developer **productivity**.
+### JSX in React 19+
+
+**JSX** (JavaScript XML) is a syntax extension for JavaScript that provides a declarative way to describe the UI structure. While it resembles HTML, it is a syntactic sugar for function calls that compile into the React element tree.
+
+### Technical Foundations
+
+*   **Syntactic Sugar**: JSX is not HTML; it is an abstraction over `React.createElement` (or the newer `jsx()` transform introduced in React 17+).
+*   **Expression Embedding**: Developers can embed arbitrary JavaScript expressions within curly braces `{}`. The React runtime handles the evaluation and injection of these expressions into the VDOM.
+*   **Transpilation**: Modern build tools (Vite, SWC, or Babel) transform JSX into standard JavaScript during the build phase. SWC, written in Rust, is the 2026 standard for high-performance JSX transpilation.
 
 ### Key Features
 
-- **Readable Syntax**: Familiar HTML tags make parsing code and debugging simpler.
+*   **Declarative UI**: By aligning code structure with the DOM hierarchy, JSX reduces cognitive load, mapping component logic directly to the rendered output.
+*   **Type-Safe Elements**: When coupled with TypeScript, JSX provides full **type inference** for component props, ensuring that the interface contracts are enforced during the compilation phase ($O(n)$ complexity for type checking against the component's signature).
+*   **Component Composition**: JSX facilitates the composition of complex UIs by allowing the nesting of custom components just like standard intrinsic elements.
 
-- **Component Embedding**: JSX supports direct embedding of components, which enhances modularity.
+### Benefits of Modern JSX
 
-- **Automatic Babel Conversion**: Behind the scenes, JSX and its HTML-like tags are transpiled into JavaScript for browser compatibility.
+*   **Performance Optimization**: React 19’s compiler can perform advanced **memoization** and **hoisting** optimizations directly on JSX structures, reducing the overhead of re-renders.
+*   **Developer Experience (DX)**: IDEs (VS Code/Cursor) utilize the JSX structure to provide robust IntelliSense, refactoring capabilities, and real-time linting.
+*   **Reduced Boilerplate**: JSX eliminates the verbosity of manual functional calls, replacing deeply nested `React.createElement` chains with readable, declarative trees.
 
-### Benefits of Using JSX
+### Code Example: JSX and Transpiled Output
 
-- **Code Compactness**: JSX helps avoid lengthy `React.createElement` calls.
-  
-- **Type Safety**: Modern IDEs provide extensive support for type checking and autocompletion with JSX.
-
-- **Compile-Time Optimizations**: JSX allows for compile-time optimizations, enhancing app performance.
-
-- **Enable Optional Syntax Checks**: For those developing in TypeScript, JSX enables Syntax Checks to ensure code quality.
-
-### Code Example: JSX and Its Transpiled Output
-
-Here is the JSX code
-
+**JSX (React 19 syntax)**:
 ```jsx
-// JSX
-const element = <h1>Hello, World!</h1>;
+// Direct usage of the new JSX transform
+const element = <h1 className="title">Hello, World!</h1>;
 ```
 
-Here is the equivalent JS code transpiled by Babel:
-
+**Transpiled JavaScript (React 19 Runtime)**:
 ```javascript
-// Transpiled JS
-const element = React.createElement('h1', null, 'Hello, World!');
+import { jsx as _jsx } from "react/jsx-runtime";
+
+// The modern transform removes the need to import 'React' in every file
+const element = _jsx("h1", { className: "title", children: "Hello, World!" });
 ```
 
-### Why Use JSX?
+### Why Use JSX in 2026?
 
-- **Concise Syntax**: JSX provides a succinct, declarative approach to building UIs.
-
-- **Improved Readability**: Its obvious resemblance to HTML promotes code clarity and reduces cognitive load.
-
-- **Static Type Checking**: When used with TypeScript or Flow, JSX brings the benefits of type safety, reducing the probability of runtime errors.
-
-- **Development Efficiency**: By simplifying UI code and providing helpful developer features, JSX accelerates the development process.
-
-- **React Ecosystem Integration**: JSX is the preferred way to write components across the React ecosystem, fostering community best practices.
+*   **Ecosystem Alignment**: The entire React ecosystem (Server Components, Suspense, Hooks) is built around JSX. Deviating from JSX restricts access to the latest framework features and community-maintained UI libraries.
+*   **Compile-Time Verification**: JSX allows build tools to detect missing props or invalid tag structures before the code ever reaches the browser, drastically reducing runtime errors.
+*   **Declarative Consistency**: JSX provides a unified language for both Client Components and React Server Components (RSC), allowing for a seamless transition between server-side rendering and client-side interactivity.
+*   **Tooling Optimization**: The 2026 build stack is optimized specifically for JSX. Using JSX allows tools like the React Compiler to analyze your component graph statically, resulting in significant runtime performance gains compared to non-JSX approaches.
 <br>
 
 ## 6. Can you explain the _virtual DOM_ in _React_?
 
-The **Virtual DOM** is a key concept in React, responsible for its high performance. It efficiently manages the **DOM** setup, minimizes updates, and then syncs them to the actual DOM tree.
+### Virtual DOM: 2026 Technical Audit
 
-### How the Virtual DOM Works
+The **Virtual DOM (VDOM)** remains a fundamental architectural pattern in React, though its implementation has evolved significantly with the introduction of **React Fiber** and concurrent rendering primitives. It serves as a declarative blueprint for the UI, allowing React to decouple UI state from expensive imperative browser DOM manipulations.
 
-1. **Initial Rendering**: When the application starts, React creates a simplified in-memory representation of the DOM, called the Virtual DOM.
-  
-2. **Tree Comparison**: During each state change, React builds a new Virtual DOM representation. It then compares this updated representation against the previous one to identify what has changed. This process is often called "reconciliation".
-  
-3. **Selective Rendering**: React determines the most minimal set of changes needed to keep the Virtual DOM in sync with the actual DOM. This approach, known as "reconciliation", is a performance booster as it reduces unnecessary updates.
+### Refined Mechanism
 
-4. **Batched Updates**: React performs the actual DOM updates in a batch, typically during the next animation frame or when no more updates are being made. This batching leads to optimized DOM operations, further enhancing performance.
+1. **Initial Rendering**: React creates a **Fiber tree**, a internal data structure representing the component tree. Each Fiber node corresponds to a React component or DOM element, holding state, props, and side effects.
 
-5. **One-Way Sync**: After the in-memory Virtual DOM and the actual DOM have been reconciled and the necessary updates identified, React syncs these changes in a **one-way** process, from the Virtual DOM to the actual DOM. This approach helps prevent unnecessary visual glitches and performance hits.
+2. **Reconciliation (The Diffing Algorithm)**: When state updates occur, React triggers a re-render. It performs a tree comparison between the current Fiber tree and the new structure. React uses a heuristic $O(n)$ algorithm, assuming that components of the same type produce similar trees, to minimize computational overhead.
 
-6. **Asynchronous** Handling: React schedules state changes, ensuring performance by bundling multiple changes that can be processed together. This aids in avoiding unnecessary Virtual DOM updates and ensures efficient tree comparisons.
+3. **Fiber Architecture**: Unlike older versions, the 2026 reconciliation process is **incremental and interruptible**. React can pause, abort, or reuse work on the component tree to prioritize urgent updates (e.g., user input) over background tasks (e.g., data fetching), maintaining high frame rates.
 
-7. **Preventing Direct DOM Manipulation**: React applications typically avoid manual DOM manipulation. Instead, all changes are made through React, which then uses its Virtual DOM mechanism to batch and apply these changes to the actual DOM.
+4. **Batched Transitions**: React 19+ utilizes `useTransition` and `useDeferredValue` to categorize updates. State changes are grouped into **transitions**, ensuring that lower-priority updates do not block the main thread, effectively decoupling logic from rendering.
 
-8. **Support for Cross-Platform Environments**: The Virtual DOM gives sturdy cross-platform capabilities, enabling consistent and optimized performance irrespective of the underlying operating system or hardware.
+5. **Commit Phase**: Once reconciliation is complete, React enters the "Commit Phase." Here, it applies changes to the actual DOM in a single pass. By batching these operations, React minimizes **layout thrashing** and forced synchronous reflows.
 
-React's Virtual DOM is primarily powered through its component architecture and extensive use of JavaScript, fundamentally changing how web applications are built and perform. Its virtuous efficiency is a testament to React's prowess as a leading front-end framework and contributes to the seamless user experiences React applications are known for providing.
+6. **Concurrent Rendering**: Modern React renders components "concurrently," meaning multiple versions of the UI can be prepared in memory simultaneously. The VDOM acts as a scratchpad where React experiments with changes before "committing" them to the screen, providing a seamless transition between states.
+
+7. **Declarative DOM Abstraction**: Direct DOM manipulation (e.g., `document.getElementById`) is considered an anti-pattern. React provides `useRef` for necessary imperative escapes, but the VDOM ensures that the source of truth remains within the React component lifecycle, preventing synchronization desyncs.
+
+8. **Universal Reconciliation**: The VDOM is platform-agnostic. While `react-dom` handles browser-specific updates, the reconciliation logic is reused by `react-native` (via native bridge) and `react-three-fiber` (via custom renderers), providing a consistent declarative API across platforms.
+
+### Performance Complexity
+The efficiency of the VDOM is rooted in:
+* **Heuristic Diffing**: Reduces tree comparison from $O(n^3)$ to $O(n)$ by utilizing key properties on lists and component type comparisons.
+* **Batching**: Reduces the constant factor of DOM writes, which are typically $O(DOM\_nodes\_changed)$, by grouping them into a single browser reflow cycle.
 <br>
 
 ## 7. What are the differences between a _class component_ and a _functional component_?
 
-Let's look at the various aspects and differences between **Class Components** and **Functional Components**.
+### Technical Audit: Component Architecture (2026 Standards)
+
+In 2026, **Functional Components** are the industry standard for all new development. **Class Components** are considered legacy and should be avoided in modern React 19+ applications.
 
 ### Core Distinctions
 
-**Class Components**:
+**Class Components (Legacy)**:
+*   Defined by extending `React.Component` or `React.PureComponent`.
+*   Relies heavily on the `this` keyword, which often leads to complex binding issues.
+*   Encapsulates state in an object-based `this.state`.
+*   Uses imperative lifecycle methods (e.g., `componentDidMount`, `componentDidUpdate`).
 
-- Utilize the `class` keyword for component definition.
-- Can have state management.
-- Allow lifecycle methods.
-- Are typically verbose.
-
-**Functional Components**:
-
-- Defined using ES6 functions.
-- Lack inherent state or lifecycle management.
-- Primarily used for UI representation.
-- Introduced `Hooks` in **React 16.8** for state and lifecycle control.
+**Functional Components (Modern)**:
+*   Defined as pure JavaScript functions.
+*   Stateless by nature but achieve state/effect persistence via **Hooks**.
+*   Eliminates the `this` binding overhead.
+*   Optimized for modern compiler features like **React Forget** (Automatic Memoization).
 
 ### Detail Evaluation
 
 #### Code Structure
-
-**Class Components**:
-
-- Consists of a `render()` method.
-- Can incorporate other methods for state updates and lifecycle management.
-
-**Functional Components**:
-
-- Evolved with introduction of React hooks.
-- `useState()` and `useEffect()` for state and lifecycle management respectively.
+*   **Class Components**: Requires a `render()` method returning JSX. Complex components often result in "wrapper hell" due to the limitations of inheritance and Higher-Order Components (HOCs).
+*   **Functional Components**: Direct return of JSX. Employs **Composition** and **Custom Hooks** to extract logic, resulting in a cleaner, flatter component tree.
 
 #### Purpose and Use-Cases
-
-**Class Components**:
-
-- Suitable for more complex components.
-- May be necessary in older codebases.
-- Gradually being replaced by hooks and functional components.
-
-**Functional Components**:
-
-- Focused on UI without managing state.
-- Introduced hooks to handle state and lifecycle methods.
+*   **Class Components**: Exists strictly for maintenance of legacy codebases (pre-React 16.8). 
+*   **Functional Components**: The primary building block. Encourages the "Single Responsibility Principle" through Hook composition.
 
 #### Editable State
+*   **Class Components**: `this.setState()` triggers a shallow merge. 
+*   **Functional Components**: `useState` and `useReducer` allow for granular state updates. In 2026, state is typically treated as immutable, often managed via deep-comparable structures or reactive primitives.
 
-**Class Components**:
+#### Lifecycle Methods vs. Synchronization
+*   **Class Components**: Lifecycle methods are imperative and grouped by timing (Mount, Update, Unmount). This often leads to fragmented logic, where related code is spread across multiple methods.
+*   **Functional Components**: The `useEffect` hook enables **synchronization logic**. By focusing on state dependencies rather than lifecycle events, the code remains highly cohesive.
+    *   *Note*: `useEffect` is increasingly replaced by specialized hooks or server-side primitives in React 19+.
 
-- Use `this.state` and `this.setState()` to manage state.
-- Useful when state contains complex data types.
-
-**Functional Components**:
-
-- Implement `useState` hook to enable state management in functions.
-- Introduced for state management in functional components, simplifying state handling.
-
-#### Lifecycle Methods
-
-**Class Components**:
-
-- Offer a wide range of lifecycle methods.
-- Example methods include `componentDidMount` and `componentWillUnmount`.
-
-**Functional Components**:
-
-- Limited lifecycle management before the introduction of hooks.
-- Use `useEffect()` to handle actions based on state and props changes. 
-
-#### Context API and Redux Usage
-
-**Class Components**:
-
-- Can easily be paired with both Context API and Redux.
-- Typically used with render props.
-
-**Functional Components**:
-
-- With hooks like `useContext`, have become proficient in handling shared state.
-- Can now be seamlessly integrated with newer global state management libraries like Redux.
+#### Context and State Management
+*   **Class Components**: Consumed via `static contextType` (limited to one context) or Render Props.
+*   **Functional Components**: `useContext` hook allows multiple context consumptions. Compatible with modern state stores like **Zustand**, **Valtio**, or **React Query**, which leverage hooks for seamless reactivity.
 
 ### Adoption and Transition
 
-- Initial React versions were heavily reliant on class components.
-- **Hooks'** introduction in **React 16.8** facilitated the shift towards fully functional components.
-- While gradual migration from class to functional is encouraged because of performance benefits, both paradigms can still coexist.
+*   **React 19/20 Shift**: Modern React emphasizes **Server Components (RSC)**. Functional Components are now the execution unit for both Server and Client-side rendering.
+*   **Performance**: Functional components perform better with the **React Compiler**, which automatically memoizes components, a feat difficult to achieve with complex `class` hierarchies.
+*   **Maintenance**: Migrating legacy classes to functional components is the recommended path to reduce technical debt and unlock features like Concurrent Rendering and Streaming SSR.
 
 ### Key Takeaways
 
-- **Class Components**:
-  - Traditional class-based components.
-  - Prefers `this` context.
-  - Houses extensive lifecycle methods.
-  - Stands as a more elaborate and structured option.
-
-- **Functional Components**:
-  - Evolved to include hooks for state management.
-  - Favored for their simplicity and ease of reusability.
-  - Perfect for simpler, stateless components.
+*   **Class Components**: 
+    *   Deprecated pattern; rely on `this` context.
+    *   Heavyweight, imperative, and verbose.
+    *   Restrictive composition patterns.
+*   **Functional Components**: 
+    *   Standardized since React 16.8; mandatory for modern paradigms (RSC).
+    *   Lean, declarative, and highly reusable.
+    *   Deeply integrated with the React ecosystem and performance-optimizing compilers.
 <br>
 
 ## 8. How do you handle _events_ in _React_?
 
-**React** simplifies the process of managing and handling events through its use of **synthetic events**.
+### Handling Events in React (2026 Standards)
 
-### Handling Events in React
+React handles events via **SyntheticBaseEvent**, a cross-browser wrapper around the native browser event. This abstraction ensures consistent interface behavior across environments (DOM, React Native) and provides performance optimizations.
 
 #### Synthetic Events
-
-React **abstracts browser events** into what are known as *synthetic events*. This ensures a consistent interface across different browsers.
+React normalizes events so that they have the same properties across all browsers. As of **React 19**, synthetic events are not pooled, eliminating the need to call `event.persist()` to access event properties asynchronously.
 
 #### Event Subscription
+- **Naming Conventions**: React uses `camelCase` for event handlers (e.g., `onClick`, `onKeyDown`) instead of the native HTML lowercase (e.g., `onclick`).
+- **Function References**: You pass a function as the event handler rather than a string.
+- **Modern Syntax**: Class components are legacy. Modern development utilizes **Functional Components** with **Hooks**.
 
-- When handling events, **React behaves consistently** across all elements, not just form elements.
+#### Modern Event Handling: Functional Components
+In 2026, state is managed via `useState`. Binding in constructors is unnecessary, and the use of `useCallback` is recommended to prevent unnecessary re-renders of child components receiving event handlers.
 
-- React events use _camelCase_, unlike HTML, which is helpful for both **consistency and avoiding reserved words in JavaScript**.
+### Code Example: Functional Component Pattern (React 19)
 
-- Use **boolean attributes** in JSX for default browser events.
+```tsx
+import { useState, useCallback, FormEvent, ChangeEvent } from 'react';
 
-#### Special Event Handling
+export default function Form() {
+  const [value, setValue] = useState<string>('');
 
-React provides _special interfaces_ for certain types of events: input components benefit from the `value` attribute, while media components make use of `src` or other similar attributes specific to their type.
+  // useCallback optimizes performance by memoizing the handler reference
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  }, []);
 
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log('Submitted:', value);
+  }, [value]);
 
-
-### Code Example: Event Handling
-
-Here is the JavaScript code:
-
-```javascript
-import React from 'react';
-
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: '' };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="name-input">Name:</label>
+      <input 
+        id="name-input"
+        type="text" 
+        value={value} 
+        onChange={handleChange} 
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 ```
+
+### Key Architectural Updates (2026)
+1. **Event Delegation**: React 19 continues to attach event listeners to the root container rather than individual DOM nodes, reducing memory overhead to $O(1)$ relative to total interactive elements.
+2. **TypeScript Integration**: Strictly typed `ChangeEvent` and `FormEvent` objects replace the generic `event` type, ensuring type safety in the event pipeline.
+3. **Transition API**: For non-urgent updates (e.g., filtering a large list), `useTransition` should be used to prevent event handlers from blocking the main thread, maintaining a UI responsiveness complexity of $O(1)$ for input latency.
 <br>
 
 ## 9. What are _state_ and _props_ in _React_?
 
-In React, **props** and **state** are both used to propagate and manage data. However, they have different roles and management patterns.
+### Data Management in React (2026 Standards)
 
-### Role & Life Cycle
+In modern React (v19+), **props** and **state** remain the fundamental primitives for data propagation and UI synchronization. React's architecture follows a **unidirectional data flow** where data typically moves from parent to child via props, while state remains localized to the component or lifted to shared ancestors.
 
-- **Props (short for "properties")** are used **to pass data from a parent component to a child** one. Once passed, props in the child component are read-only and can't be directly modified by the child.
+### Role & Lifecycle
 
-- **State** is used to manage data within a component, and is mutable. Any changes to state values trigger a component re-render.
+*   **Props (Properties):** Immutable data objects passed from a parent component to a child. They serve as the component’s **configuration**. A component must be **pure** with respect to its props; it should never modify its own props, as they are managed by the parent.
+*   **State:** Local, mutable data storage within a component. Updating state via the setter function (e.g., `useState` dispatch) schedules a **re-render** of the component tree to reflect the new state.
 
-### When to Use 
+### Strategic Selection
 
-- **Props** are for data that does not change within the component and is provided by a parent.
-- **State** is for data that does change within the component and is managed by that component itself.
+*   **Props:** Use for data transmission, configuration, and event callbacks. Props act as the "API" of a component.
+*   **State:** Use for data that changes over the component’s lifecycle—such as user inputs, server-side response buffers, or ephemeral UI toggles. With the rise of Server Components in React 19, state is minimized in favor of streaming data directly from the server.
 
-### Management
+### Management & Performance
 
-- When a component receives new props, React will merge them with any existing state. However, it won't override state values unless you explicitly set them.
-  
-- Since React re-renders the entire component when you update state, it's important to be efficient in state management. Tools like `useMemo` or `shouldComponentUpdate` can help optimize re-renders.
+*   **Re-rendering:** React uses a **Fiber** reconciliation algorithm. Updating state triggers a sub-tree render. In 2026, we avoid manual optimization like `shouldComponentUpdate` (deprecated for functional components). Instead, we utilize `useMemo`, `useCallback`, and the `memo` Higher-Order Component to prevent unnecessary re-computations.
+*   **State Hoisting:** When multiple components share state, "lift" the state to the nearest common ancestor.
+*   **Composition:** Rather than deep prop-drilling, use **React Context** or **Server Components** to inject data into sub-trees.
 
-### Unifying with Hooks
+### Unifying with Hooks and Server Components
 
-- The `useState` hook (along with other hooks like `useEffect`) allows functional components to manage state, bringing them closer in capability to class components.
-  
-- Prior to the introduction of hooks in React 16.8, state was the exclusive domain of class components. But now, both state and its associated lifecycle hooks belong to **functional components** as well.
+*   **Functional Components:** The industry standard. Class components are legacy and should not be used in new projects.
+*   **React 19 Context:** The `use` hook has modernized how we consume Promises and Context, allowing for cleaner asynchronous state resolution within components.
+*   **Server Components:** By default, components in the App Router architecture are **Server Components**. They do not support hooks like `useState`. State is relegated to **Client Components** explicitly marked with the `"use client"` directive.
 
-### Code Example: State and Props Management
-
-Here is the JavaScript code:
+### Code Example: Modernized State and Props
 
 ```javascript
-import React, { useState } from 'react';
+'use client';
 
-// Button Component
-const Button = ({ text, color }) => {
-  return <button style={{background: color}}>{text}</button>;
-};
+import React, { useState, memo } from 'react';
 
-// ColorPicker Component
+// Use memo to prevent unnecessary re-renders of stable children
+const Button = memo(({ text, color, onClick }) => {
+  return (
+    <button style={{ backgroundColor: color }} onClick={onClick}>
+      {text}
+    </button>
+  );
+});
+
 const ColorPicker = () => {
   const [color, setColor] = useState('blue');
 
-  const changeColor = (newColor) => {
-    setColor(newColor);
-  };
-
+  // useCallback is omitted here for brevity, 
+  // but recommended for complex prop-drilling scenarios.
   return (
     <div>
-      <Button text="Red" color="red" onClick={() => changeColor('red')} />
-      <Button text="Blue" color="blue" onClick={() => changeColor('blue')} />
-      <Button text="Green" color="green" onClick={() => changeColor('green')} />
+      <p>Current Color: {color}</p>
+      <Button text="Red" color="red" onClick={() => setColor('red')} />
+      <Button text="Blue" color="blue" onClick={() => setColor('blue')} />
     </div>
   );
 };
 
-// App Component
-const App = () => {
-  return <ColorPicker />;
-};
+export default ColorPicker;
 ```
+
+### Complexity Analysis
+*   **Rendering Complexity:** Given $n$ nodes in a component sub-tree, a state update has a time complexity of $O(n)$ in the worst case, as React must perform reconciliation (diffing) to determine DOM patches. 
+*   **Optimization:** Using `memo` reduces the branching factor of the reconciliation process, effectively pruning sub-trees that do not require re-evaluation, optimizing performance towards $O(k)$ where $k$ is the number of changed nodes.
 <br>
 
 ## 10. How do you pass _data_ between _components_ in _React_?
 
-**Data propagation** in React components primarily relies on two mechanisms:
+### Data Propagation in React (2026)
 
-- **Props**: For unidirectional data flow, parent components pass data to their children via props.
-  
-- **Callback Functions**: Data moves up the tree when children invoke specific functions passed down from their parents.
+**Data propagation** in React (v19+) adheres to the core principle of **unidirectional data flow**. While the fundamentals of Props and Callbacks remain, modern React emphasizes **Server Components**, **Context API**, and **Signals** (or state management libraries) to mitigate "prop drilling."
 
-Let's have a look at the best-practices for these two mechanisms.
+#### Mechanism 1: Unidirectional Props
+Props facilitate parent-to-child communication. In React 19, props are now treated as standard **stable arguments** to component functions, eliminating the need for `React.FC` wrapper types, which are now largely considered boilerplate.
 
-### Using Props
+#### Mechanism 2: Callback Functions
+Data moves up the tree when children invoke functions passed down as props. These functions typically trigger `dispatch` actions or state setters (e.g., `useState`, `useActionState`).
 
-  - **Role**: Primarily used for one-way data flow. The parent furnishes the child with props that the child component can neither alter nor reassign.
-  
-  - **Best Practices**:
-    - Leverage props for read-only data in child components.
-    - Rerender the child component, if necessary, when the prop values change.
+---
 
-  - **Code Example: Read-Only Checkbox**:
+### Best Practices: 2026 Standards
 
-  Your task is to write the full code for the React Application to demonstrate passing data to child components using props.
+1.  **Component Definition**: Prefer standard function declarations over `React.FC`.
+2.  **Type Safety**: Use `interface` or `type` for props, favoring **discriminated unions** for complex state transitions.
+3.  **Prop Drilling Mitigation**: For deep tree propagation, use the **Context API** or **Signals** to bypass intermediary components.
+4.  **Composition**: Use the `children` prop (or slot patterns) to compose components, reducing the need to pass data through multiple layers.
 
-### Children Built With Props
+---
 
-In this code example, `App` maintains the `optionSelected` state that it shares with the `DropDown` and `SelectedOption` components. `DropDown` uses the `optionSelected` state to determine which option was picked, shared with `SelectedOption` to display it.
+### Modernized Code Example: State Synchronization
+
+In this 2026-compliant implementation, `App` maintains the state, and `DropDown` notifies the parent of changes via a callback, maintaining **Single Source of Truth (SSOT)**.
 
 ```tsx
 // src/components/DropDown.tsx
 interface DropDownProps {
-  options: string[]
+  options: string[];
+  onSelect: (option: string) => void;
+  selected: string;
 }
 
-const DropDown: React.FC<DropDownProps> = ({ options }) => {
-  const [selected, setSelected] = React.useState(0);
-
+// Modern function declaration without React.FC boilerplate
+export function DropDown({ options, onSelect, selected }: DropDownProps) {
   return (
-    <div>
-      <div>Options:</div>
-      {options.map((opt, index) => (
-        <button key={index} onClick={() => setSelected(index)}>{opt}</button>
-      )}
-      <SelectedOption option={options[selected]} />
-    </div>
+    <nav>
+      <p>Current: {selected}</p>
+      {options.map((opt) => (
+        <button 
+          key={opt} 
+          onClick={() => onSelect(opt)}
+          aria-pressed={selected === opt}
+        >
+          {opt}
+        </button>
+      ))}
+    </nav>
   );
-};
-
-// src/components/SelectedOption.tsx
-interface SelectedOptionProps {
-  option: string
 }
-
-const SelectedOption: React.FC<SelectedOptionProps> = ({ option }) => {
-  return <div>You selected: {option}</div>;
-};
 
 // src/App.tsx
-const App: React.FC = () => {
-  const options = ['Apple', 'Banana', 'Cherry'];
-  return <DropDown options={options} />;
-};
+import { useState } from 'react';
+import { DropDown } from './components/DropDown';
 
-export default App;
+export default function App() {
+  const [selection, setSelection] = useState<string>('Apple');
+  const options = ['Apple', 'Banana', 'Cherry'];
+
+  return (
+    <main>
+      <DropDown 
+        options={options} 
+        onSelect={setSelection} 
+        selected={selection} 
+      />
+      <section>You selected: {selection}</section>
+    </main>
+  );
+}
 ```
+
+### Complexity Analysis
+For a tree of depth $d$ and branching factor $b$, passing props through every layer incurs:
+- **Time Complexity**: $O(1)$ per prop transfer.
+- **Maintenance Complexity**: $O(d)$ for refactoring.
+
+Using **Context API** reduces maintenance complexity to $O(1)$ for leaf node access, effectively decoupling the intermediate nodes from the data propagation logic.
 <br>
 
 ## 11. What is a _stateful component_?
 
-**Stateful components** in React are fueled by internal states, allowing them to adapt to user interactions and data changes.
+### Modernization Audit (2026 Standards)
 
-By invoking `this.setState()`, components update their state, triggering a re-render and ensuring the UI and state are in sync.
+The original content relies on **Class Components** (`React.Component`), which are legacy patterns. In **React 19**, the industry standard for state management is the **Hooks API**. While class components remain supported for backward compatibility, they are deprecated in modern architectural paradigms.
+
+#### Definition
+**Stateful components** in React are components that manage internal data that persists across renders. In modern React, this is achieved using the `useState` or `useReducer` hooks. When state values update, React triggers a re-render of the component to synchronize the DOM with the new state.
 
 ### When to Use
 
-- **Dynamic Interactions**: For components that require dynamic updates, such as a counter that increments on every click.
-  
-- **User Input Handling**: Useful for capturing and validating user inputs in forms.
+*   **Dynamic Interactions**: Components requiring real-time updates (e.g., counters, toggles).
+*   **User Input Handling**: Managing controlled components in forms.
+*   **Data Synchronization**: Handling asynchronous API responses and managing their loading/error states.
 
-- **Data Fetching**: To manage and display data obtained from API calls.
+### Code Example: Functional Stateful Component
 
-### Code Example: Stateful Component
-
-Here is the JavaScript code:
-
-```jsx
-import React, { Component } from 'react';
-
-class ClickCounter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { count: 0 };
-  }
-
-  handleIncrement = () => {
-    this.setState(prevState => ({ count: prevState.count + 1 }));
-  }
-
-  render() {
-    return (
-      <div>
-        <p>Count: {this.state.count}</p>
-        <button onClick={this.handleIncrement}>Increment</button>
-      </div>
-    );
-  }
-}
-
-export default ClickCounter;
-```
-<br>
-
-## 12. Can you explain how _useState_ works?
-
-**`useState`** is a built-in **React Hook** that empowers components to preserve stateful values. It amalgamates a stateful value with a state-modifying function, enabling direct manipulation.
-
-**Hooks** are utility functions that enable you to manage state, side effects, and other React features in **function components**.
-
-### Core Components of `useState`
-
-1. **Stateful Value**: The first element in the tuple returned by `useState` carries the current state, like any other state in React.
-
-2. **Setter Function**: The second element is a function that determines the state's new value. Upon invocation, it imparts this new state to the component, just as `setState` does in classes.
-
-Given `value` as the stateful value and `setValue` as the setter function, calling `setValue(newValue)` will alter `value` to `newValue`.
-
-### Behavioral Traits of `useState`
-
-- **Lazy Initialization**: If the stateful value necessitates a computationally intensive or time-consuming setup, employing `useState` ensures that this setup occurs exclusively when the component is first rendered rather than on every update.
-
-- **Referential Integrity**: If you employ the `useState` Hook at distinct spots within a component or even dissimilar components, React guarantees that each endeavor manages its unique state underlying value, akin to using `this.state` in classes.
-
-### Code Example: useState
-
-Here is the React Component:
+In **React 19**, use the `useState` hook. This approach eliminates `this` binding issues and reduces boilerplate code.
 
 ```jsx
 import React, { useState } from 'react';
 
-const Counter = () => {
+const ClickCounter = () => {
+  // useState returns the current value and a setter function
   const [count, setCount] = useState(0);
+
+  const handleIncrement = () => {
+    // Functional updates ensure correct state transition based on previous value
+    setCount((prevCount) => prevCount + 1);
+  };
 
   return (
     <div>
       <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
+      <button onClick={handleIncrement}>Increment</button>
     </div>
   );
 };
+
+export default ClickCounter;
 ```
+
+### Technical Note: Complexity & Performance
+*   **Re-rendering**: State updates in React trigger a reconciliation process. React utilizes a **Fiber** architecture, allowing the engine to split rendering work into chunks with an asymptotic complexity of $O(n)$ in the worst case relative to the component tree size.
+*   **Memoization**: To optimize stateful components, use `React.memo` or `useMemo` to prevent unnecessary re-renders of child components if props remain referentially equal, maintaining efficient $O(1)$ lookup for dependency changes.
+<br>
+
+## 12. Can you explain how _useState_ works?
+
+### `useState` in Modern React (2026)
+
+**`useState`** is a fundamental **React Hook** that enables functional components to maintain state across re-renders. It returns a pair: the current state value and a dispatch function to update it. By leveraging **Fiber architecture**, React tracks the order of hook calls via a linked list stored on the `memoizedState` property of the `fiber` node.
+
+#### Core Components of `useState`
+
+1. **Stateful Value**: The first element in the returned array represents the current state. React preserves this value between renders.
+2. **Dispatch Function**: The second element is the state-setter. In React 19+, this function is stable across renders, allowing it to be passed as a prop without triggering unnecessary downstream re-renders.
+
+#### Behavioral Traits of `useState`
+
+*   **Lazy Initialization**: Passing a function to `useState` (e.g., `useState(() => expensiveCalculation())`) ensures the function executes only during the **initial mount**. This prevents unnecessary overhead during subsequent render cycles, which occur with $O(n)$ complexity relative to the state tree size.
+*   **State Batching**: Since React 18, all state updates—including those in promises, timeouts, and native event handlers—are automatically batched. This minimizes the number of DOM mutations, effectively reducing the render cost to $O(1)$ per state transition.
+*   **Referential Integrity**: Each call to `useState` is indexed by its position in the component's hook list. Conditional execution of hooks is strictly forbidden; breaking this rule causes an architectural mismatch in the linked list, leading to state corruption.
+
+#### Functional Updates
+When the new state is derived from the previous state, pass an updater function to avoid stale closures. This pattern is mandatory for **Concurrent React** environments to ensure consistent state transitions.
+
+```jsx
+import { useState } from 'react';
+
+const Counter = () => {
+  // 2026 Best Practice: Using an arrow function for atomic updates
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount((prev) => prev + 1)}>
+      Count: {count}
+    </button>
+  );
+};
+```
+
+#### Performance Analysis
+Updating state triggers a **Reconciliation** process. React compares the new state with the previous state using `Object.is`. If they are identical, React performs a **bailout**, preventing a re-render of the component and its children. The time complexity for this check is $O(1)$.
 <br>
 
 ## 13. How do you update the _state_ of a _parent component_ from a _child component_?
 
-**React** encourages **unidirectional data flow**, primarily passing data from parent to child. However, occasional need arises to update parent state from a child component. This can be facilitated using specific patterns and techniques.
+### Modernizing React State Synchronization (2026 Standards)
+
+**React** enforces **unidirectional data flow**, where data descends the tree via props. Updating **Parent state** from a **Child component** is fundamentally achieved via **Lifting State Up**, leveraging callbacks or dependency injection.
 
 ### Primary Methods
 
-1. **Props Callback**: Pass a function `onStateChange` as a prop which the child can call to update parent state.
+1. **Props Callback (Standard Pattern)**: The parent passes a memoized handler function (e.g., `useCallback`) as a prop. The child invokes this function to trigger a state update in the parent.
   
-2. **Context API**: Use `Context` to make state accessible and modifiable from descendant components.
+2. **Context API (via State-Reducer Pattern)**: Use `createContext` coupled with `useReducer` to provide a state dispatcher. This avoids "prop drilling" in deep component trees and is the preferred 2026 standard for intermediate-scale state sharing.
 
-### Advanced Techniques
+### Advanced Patterns (2026 Context)
 
-1. **UseRef and ForwardRef**: Utilize `useRef` and `forwardRef` to get a reference to a child component, allowing you to directly manipulate its properties.
+1. **Imperative Handle (`useImperativeHandle`)**: Used with `forwardRef` to expose specific imperative methods to a parent. This is preferred over direct reference manipulation, allowing the parent to trigger child logic while maintaining **encapsulation**.
 
-2. **Global State Management**: Implement a global state management solution like Redux or MobX if state changes are pervasive.  
+2. **State Management Libraries (Zustand/TanStack Store)**: For complex global state, **Zustand** is the industry standard (2026) due to its minimal boilerplate and **atomic updates**. Redux Toolkit remains viable for large-scale enterprise systems, while MobX is largely relegated to legacy maintenance.
 
-3. **Data Services**: Use a service to manage shared state, which can be updated and read by different components.
+3. **Server State (TanStack Query/SWR)**: Do not use local/global state for server data. Use **TanStack Query** to synchronize client-side state with the server, ensuring automatic cache invalidation and mutation handling.
 
-### Code Example: State Management
-
-Here is the React Component:
+### Code Example: Optimized Callback (React 19+)
 
 ```jsx
-// App.js - Parent component
-import React, { useState } from 'react';
-import Child from './Child';
+// Parent.jsx
+import { useState, useCallback } from 'react';
+import { Child } from './Child';
 
-function Parent() {
-  const [state, setState] = useState('');
+export const Parent = () => {
+  const [data, setData] = useState('');
 
-  const updateState = (newState) => {
-    setState(newState);
-  };
+  // useCallback prevents unnecessary re-renders of the child
+  const handleUpdate = useCallback((newValue) => {
+    setData(newValue);
+  }, []);
 
-  return <Child updateParentState={updateState} />;
-}
+  return <Child onUpdate={handleUpdate} />;
+};
+
+// Child.jsx
+import { memo } from 'react';
+
+// memo ensures the child only re-renders if props change
+export const Child = memo(({ onUpdate }) => {
+  return (
+    <button onClick={() => onUpdate('Updated via memoized callback')}>
+      Update Parent
+    </button>
+  );
+});
 ```
 
-```jsx
-// Child.js - Child component
-import React from 'react';
-
-function Child({ updateParentState }) {
-  const handleClick = () => {
-    updateParentState('New state from child!');
-  };
-
-  return <button onClick={handleClick}>Update Parent</button>;
-}
-```
-
-In this example, the `Parent` component maintains the state, which is updated via the function `updateState` passed as a prop to `Child`. When a button inside `Child` is clicked, the `updateParentState` function updates the parent state.
+### Architectural Performance Note
+When updating parent state, ensure the state is placed as low as possible in the tree to prevent unnecessary re-renders of unrelated branches. Complexity of state propagation in React is $O(n)$, where $n$ is the number of component updates. Utilize `React.memo` and `useCallback` to maintain an amortized update cost of $O(1)$ relative to the total component count.
 <br>
 
 ## 14. What is _lifting state up_ in _React_?
 
-**Lifting State Up** in React entails managing state in parent components to propagate it to multiple children, typically to ensure synchronization or data flow.
+### Definition: Lifting State Up
+**Lifting State Up** is the architectural pattern of moving local component state to a common ancestor to synchronize data across multiple dependent components. This enforces a **unidirectional data flow**, ensuring that changes propagate downward through `props` while maintaining a **Single Source of Truth (SSOT)**.
 
 ### Why Use Lifting State Up?
+- **Data Synchronization**: Ensures child components react to the same state updates, preventing disparate or "stale" UI states.
+- **Derived State Efficiency**: Simplifies logic where multiple children depend on a single state variable; the parent calculates derived values, reducing redundant computations.
 
-- **Consistent Data**: Prevents inconsistencies in related data scattered across components.
-- **Easier Data Modifications**: Minimizes complexity when updating shared data, especially with complex data structures or numerous children.
+### Core Mechanism: React 19 Standards
+In modern React (19+), functional components and hooks have superseded class-based components. State is managed via `useState` and synchronized via prop drilling or **React Context** for deep component trees.
 
-### Core Mechanism: Props
+### Modernized Code Implementation (React 19)
 
-React components communicate using `props`, where child components receive data from parents. During **lifting state up**, the parent maintains the state and passes down relevant data as props.
-
-### Lifting State Up in Code
-
-Here is the React code:
-
-#### Parent Component: RectangleAreaCalculator
-
+#### Parent Component: `RectangleAreaCalculator`
 ```jsx
-class RectangleAreaCalculator extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { width: 0, height: 0 };
-  }
+import { useState } from 'react';
 
-  render() {
-    return (
-      <div>
-        <ShapeInput
-          type="number"
-          label="Width"
-          value={this.state.width}
-          onChange={(e) => this.setState({ width: e.target.value })}
-        />
-        <ShapeInput
-          type="number"
-          label="Height"
-          value={this.state.height}
-          onChange={(e) => this.setState({ height: e.target.value })}
-        />
-        <ShapeArea area={this.state.width * this.state.height} />
-      </div>
-    );
-  }
-}
+const RectangleAreaCalculator = () => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDimensions(prev => ({ ...prev, [name]: Number(value) }));
+  };
+
+  return (
+    <section>
+      <ShapeInput name="width" value={dimensions.width} onChange={handleChange} />
+      <ShapeInput name="height" value={dimensions.height} onChange={handleChange} />
+      <ShapeArea area={dimensions.width * dimensions.height} />
+    </section>
+  );
+};
 ```
 
-#### Child Components: ShapeInput and ShapeArea
-
+#### Child Components: `ShapeInput` and `ShapeArea`
 ```jsx
-const ShapeInput = ({ type, label, value, onChange }) => (
+const ShapeInput = ({ name, value, onChange }) => (
   <div>
-    <label>{label}</label>
-    <input type={type} value={value} onChange={onChange} />
+    <label>{name.charAt(0).toUpperCase() + name.slice(1)}</label>
+    <input name={name} type="number" value={value} onChange={onChange} />
   </div>
 );
 
 const ShapeArea = ({ area }) => <div>Area: {area}</div>;
 ```
 
-In this example, the `RectangleAreaCalculator` maintains the `width` and `height` state and passes them as props to the `ShapeInput` components. The `ShapeArea` component calculates the area and receives `width` and `height` as props, keeping its state logic-free.
-
 ### Advantages
+- **SSOT Integrity**: Prevents state duplication. Since React's reconciliation engine ($O(n)$ complexity for component tree updates) relies on state stability, centralized control minimizes unnecessary re-renders.
+- **Predictable Debugging**: Facilitates the use of DevTools to trace state mutations from the parent down, streamlining the isolation of UI defects.
 
-- **Single Source of Truth**: Shared data lives in the parent, reducing complexities stemming from data redundancy or inconsistencies.
-- **Predictable Data Flow**: Changes to the data layer (parent) trigger updates to all its children. This helps in maintaining the coding standards and data integrity.
-
-### Most Common Implementations
-
-- **Form State**: Centralizes form data management in one place, simplifying form submissions or data validation.
-- **Shared Logic**: Multiple components using the same data or functionality can benefit from centralized state management.
+### Implementation Patterns
+- **Controlled Components**: Form inputs are managed entirely via parent state, making validation and submission logic centralized.
+- **Cross-Component Communication**: Facilitates sibling interaction that would otherwise require complex event bubbling or context overhead.
 
 ### When It's Overkill
+Lifting state unnecessarily causes **Prop Drilling**, where intermediate components pass data they do not utilize. 
 
-For small-scale apps or in situations with data that lacks a clear **source of "truth"**, the technique might introduce unnecessary complexity.
-
-Aiming for a balance between centralized and localized state management is key, and React provides tools like `useContext` and `useState` that cater to both requirements.
+- **Escalation Path**: If state must be accessed by components deeply nested in the tree (e.g., global themes, auth state), utilize the **Context API** or state management libraries (e.g., Zustand or TanStack Store) to bypass the middle-tier components. 
+- **Heuristic**: If moving state up increases the `props` count of intermediate components by more than 3, evaluate the use of **Composition** (passing components as `children`) or a dedicated state provider.
 <br>
 
 ## 15. When do you use _Redux_ or _Context API_ for state management?
 
-**Redux** and the **Context API** serve as tools for managing state in large React applications. Here are situations which might call for one or the other, or even both:
+### State Management Architecture: Redux vs. Context API (2026 Standards)
 
-### Advantages of Redux
+Managing application state in **React 19** requires distinguishing between **Global App State** (frequently changing, high-frequency updates) and **Dependency Injection** (low-frequency updates, configuration).
 
-1. **Full App Coverage**: Redux operates on a global state, enabling consistent app behavior and simplifying state transitions across components.
+### Redux (Redux Toolkit)
+In 2026, **Redux Toolkit (RTK)** is the mandatory interface. The legacy `connect` HOC is deprecated; the `useSelector` and `useDispatch` hooks are the standard for all functional components.
 
-2. **Predictable State Changes**: Changes in Redux follow a strict flow, optimizing teamwork and troubleshooting.
+1.  **High-Frequency State**: Optimized for state that changes multiple times per second (e.g., real-time tickers, complex drag-and-drop buffers).
+2.  **Predictable State Transitions**: Enforces unidirectional data flow via **Immer**-integrated reducers, ensuring state immutability with $O(1)$ conceptual complexity for developers.
+3.  **Middleware Ecosystem**: Robust support for side-effect management via **RTK Query**, which natively handles caching, polling, and optimistic updates, reducing boilerplate compared to manual `useEffect` implementations.
+4.  **DevTools & Observability**: Provides centralized logging and time-travel debugging, which remains the industry standard for auditing complex state trajectories in distributed teams.
 
-3. **Time Travel**: Redux devtools allow for easy time travel, aiding in bug detection and state history visualization.
+#### When to Pick Redux
+*   **Complex State Dependencies**: Use when state slices share data or require relational logic.
+*   **Large-Scale Performance Requirements**: Use when granular component updates are required to prevent re-rendering the entire component tree.
+*   **Advanced Caching**: Use when the application requires sophisticated data fetching and cache invalidation strategies provided by RTK Query.
 
-4. **Performance Optimization**: With its selective rendering feature, `connect` from `react-redux` ensures only the required components are updated, thus mitigating wasteful renders.
+### React Context API
+**Context API** is a dependency injection mechanism, not a state management solution. It is designed to propagate values through the tree without prop drilling.
 
-5. **Optimal for Bigger Apps**:
+1.  **Lightweight Integration**: Zero-bundle overhead as it is a core feature of React. Ideal for avoiding third-party dependency bloat in lightweight components.
+2.  **Performance Constraints**: Context broadcasts updates to all consumers whenever the value changes. Without memoization ($useMemo$, $memo$), this triggers re-renders across the entire provider tree, resulting in $O(n)$ re-render complexity where $n$ is the number of child nodes.
+3.  **Encapsulation**: Simplifies the distribution of static or semi-static data (e.g., Localization, Theme, Auth session).
 
-   - Reduces the need for props drilling.
-   - Offers a centralized point for state changes.
+#### When to Pick Context API
+*   **Static or Low-Frequency Data**: Ideal for configuration data that rarely changes (e.g., UI themes, current user locale).
+*   **Simple Dependency Injection**: Use when you need to pass down services or singleton instances without explicit prop drilling.
+*   **Component Libraries**: Essential for building compound component patterns where sub-components must access parent state implicitly.
 
-### When to Pick Redux
+### Technical Comparison Summary
 
-- **Large Apps with Complex State**: Ideal for apps with intensive state requirements and a multitude of components.
+| Feature | Redux Toolkit | Context API |
+| :--- | :--- | :--- |
+| **Primary Use** | Complex, high-frequency state | Configuration, Dependency Injection |
+| **Performance** | Selective rendering (selectors) | Full subtree re-render (default) |
+| **Boilerplate** | Moderate (standardized via RTK) | Minimal |
+| **DevTools** | Native Time-Travel | Limited (React DevTools only) |
+| **Complexity** | $O(1)$ to $O(log n)$ scaling | $O(n)$ rendering behavior |
 
-- **Frequent Inter-Component Communications**: When different sections of your application need to exchange data often, a central store, such as Redux, can streamline this process.
-
-### Advantages of Context API
-
-
-   
-1. **Simplicity**: The Context API is built into React and is more straightforward to set up, making it a more convenient choice for simpler state needs.
-
-2. **Single Point of Configuration**: Context API allows for a centralized point of configuration for state, similar to Redux.
-
-3. **Easier to Understand for Smaller Apps**: It's less intensive and thus, is easier to explain and understand, especially for junior developers or in smaller teams.
-
-### When to Pick Context API
-
-- **When No Nested Components**: Great for smaller applications or ones with minimal nesting of components, eliminating the need to prop-drill or create additional HOCs or render-props to share state.
-
-- **For App-Wide Configurations**: It's useful for handling global configurations, such as themes or user authentication.
-
-- **Newer React Projects Involving Hooks**: Since the Context API underwent significant improvements with the introduction of Hooks, it's an appealing choice for new projects.
+**Audit Conclusion**: Favor **Context API** for global UI configurations and **Redux Toolkit** for application business logic, form state, and server-cache synchronization. Abandon the use of legacy class-based `connect` patterns in favor of the current Hook-based API.
 <br>
 
 
