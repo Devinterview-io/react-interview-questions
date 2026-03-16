@@ -7,799 +7,878 @@
 </a>
 </p>
 
-#### You can also find all 100 answers here 👉 [Devinterview.io - React](https://devinterview.io/questions/web-and-mobile-development/react-interview-questions)
+#### You can also find all 100 answers here 👉 [Devinterview.io - WebSockets](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions)
 
 <br>
 
-## 1. What is _React_ and why is it used?
+## 1. What is WebSocket protocol and how does it differ from HTTP?
 
-### React: Modern Definition (2026)
+### WebSocket vs. HTTP: 2026 Technical Audit
 
-**React** is a declarative, component-based library for building user interfaces. As of 2026, it is governed by the **React 19+** paradigm, emphasizing **Concurrent Rendering**, **Server Components**, and **Actions**.
+**WebSocket** (RFC 6455) and **HTTP/3** (RFC 9114) represent distinct paradigms in transport and application-layer communication. While HTTP/3 over QUIC has narrowed the latency gap for request-response cycles, WebSocket remains the standard for stateful, persistent, full-duplex streams.
 
----
+### Core Differences
 
-### Core Architectural Concepts
+*   **Communication Model**: HTTP is inherently **request-response**. Even with HTTP/2 and HTTP/3 multiplexing, the client dictates data exchange. WebSockets implement **Full-Duplex** communication over a single TCP/TLS connection, allowing either party to push data asynchronously.
+*   **Connection Lifecycle**: HTTP is primarily **stateless**. While HTTP/3 maintains connection persistence (0-RTT), it remains transactional. WebSockets undergo an **HTTP 101 Switching Protocols** handshake, upgrading the connection to a persistent binary stream that remains open until explicitly terminated.
+*   **Protocol Overhead**: HTTP/1.1 requires repetitive header transmission. While HTTP/2+ uses **HPACK/QPACK** header compression to mitigate this, WebSockets outperform in high-frequency, low-payload scenarios because frames after the handshake incur only a **2-to-14 byte overhead**.
+*   **Data Framing**: WebSockets utilize a distinct framing protocol that allows interleaved control frames (ping/pong) and data frames (text/binary) without re-initiating a request cycle.
 
-#### Concurrent Rendering & Virtual DOM
-While React still utilizes a Virtual DOM for reconciliation, the 2026 standard emphasizes **Concurrent React**. This allows React to prepare multiple versions of the UI simultaneously without blocking the main thread. By prioritizing updates (e.g., input typing over data fetching), React achieves better responsiveness. The diffing algorithm maintains $O(n)$ complexity through heuristic assumptions, optimized for modern browser engines.
+### Operation Mechanism
 
-#### Functional Components & Hooks (The Standard)
-**Class Components are effectively legacy.** Modern development exclusively uses **Functional Components**.
-*   **Hooks:** The standard mechanism for state (`useState`), side effects (`useEffect`), and memoization (`useMemo`, `useCallback`).
-*   **React 19 Features:** The introduction of the `use` hook and automatic transitions has replaced much of the boilerplate previously required for data fetching.
+*   **HTTP**: Operates on a transactional basis. The client sends a request; the server processes the state and returns a response. Modern HTTP/3 utilizes **QUIC** (UDP-based) to solve head-of-line blocking at the transport layer, significantly improving performance for traditional web content.
+*   **WebSockets**: Leverages a long-lived TCP connection. By maintaining the pipe, the server avoids the overhead of repeated TLS handshakes for every message. This reduces the latency of message delivery to $O(1)$ post-handshake, making it deterministic compared to the jitter inherent in sequential HTTP requests.
 
-#### Server Components (RSC)
-The architectural divide between **Client Components** and **Server Components** is fundamental. Server Components execute exclusively on the server, sending rendered UI to the client. This reduces bundle size significantly, as component-level logic and dependencies remain on the server, shipping zero-kilobyte JavaScript to the browser for static portions of the UI.
+### Protocol Stack Integration
 
-#### Unidirectional Data-Flow & Server Actions
-Data remains strictly one-way (parent-to-child). However, **Server Actions** have replaced the traditional pattern of fetching data via `useEffect` + `useState`. Actions allow you to call server-side functions directly from UI elements (e.g., forms), integrating mutation logic directly into the component lifecycle.
+*   **HTTP**: Sits at the **Application Layer** (Layer 7). HTTP/3 leverages QUIC, which integrates transport layer features into the protocol stack.
+*   **WebSockets**: Initiates via an **HTTP/1.1 upgrade header**, then transitions to a custom protocol implementation. In 2026, **WebTransport** (built on HTTP/3) is increasingly used for use cases requiring unreliable or unordered data streams, though WebSocket remains the ubiquitous choice for reliable ordered communication.
 
-#### JSX: Transpilation to React Elements
-**JSX** remains the syntax extension for JavaScript. In modern build tools (e.g., Vite, Rspack), JSX is transformed into `_jsx` runtime calls, optimized for the specific rendering target (Client vs. Server).
+### Best-Candidate Use Cases
 
----
+*   **HTTP/3**: Optimal for document fetching, RESTful APIs, and idempotent data retrieval where the overhead of maintaining state is unnecessary.
+*   **WebSockets**: Mandatory for low-latency, state-dependent environments:
+    *   **Real-time Collaborative Engines**: Multi-user editing (e.g., CRDT-based synchronization).
+    *   **Financial Market Data**: High-frequency ticker updates where every millisecond of latency reduction is critical.
+    *   **Interactive Gaming**: Managing synchronized game-state updates across high-concurrency client sessions.
 
-### Why use React in 2026?
+### 2026 Modernization Note: WebSocket vs. WebTransport
+While WebSockets remain standard for reliable streams, **WebTransport API** is now preferred for low-latency media streaming and advanced gaming, as it allows developers to choose between reliable and unreliable data delivery over HTTP/3, mitigating the "head-of-line blocking" issues inherent in the TCP-based WebSocket protocol.
+<br>
 
-*   **Server-Side First:** Modern frameworks (e.g., Next.js, Remix) built on React leverage **React Server Components (RSC)** for superior SEO and performance metrics.
-*   **Declarative UI:** By defining UI as a function of state ($UI = f(state)$), React simplifies state transitions and ensures predictable rendering.
-*   **The Ecosystem:** 2026 React is part of a massive ecosystem including **TanStack** (Query/Router), **Zustand** (State), and **Tailwind CSS**, providing a standardized path for enterprise-grade scalability.
-*   **Type Safety:** First-class support for **TypeScript** is now the baseline. Prop definitions and state types are strictly enforced during the build process, minimizing runtime errors.
+## 2. Explain how the WebSocket handshake works.
 
----
+### WebSocket Handshake Architecture (2026 Update)
 
-### Modern Code Example (React 19+)
+The **WebSocket handshake** transitions a standard HTTP/1.1 request into a persistent, **full-duplex** binary framing protocol (RFC 6455). This mechanism facilitates low-latency communication by bypassing the overhead of repetitive HTTP request-response cycles.
 
-The following snippet demonstrates the shift toward `useActionState` and modern functional patterns, replacing legacy class-based state management.
+#### 1. Client Initiation
+The client initiates the upgrade via an HTTP GET request. In 2026, clients must include the `Sec-WebSocket-Version: 13` header, which remains the definitive version for global interoperability.
 
-```jsx
-'use client'; // Required for interactivity in RSC environments
+```http
+GET /chat HTTP/1.1
+Host: server.example.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: <base64-encoded-nonce>
+Sec-WebSocket-Version: 13
+Origin: https://example.com
+```
 
-import { useActionState } from 'react';
+#### 2. Server Response and Protocol Switching
+The server inspects the request. Upon validation, it returns an **HTTP 101 Switching Protocols** status. The connection remains open, shifting the underlying socket from textual HTTP parsing to the **WebSocket Frame Protocol**.
 
-// Modern approach: Server Actions integration
-async function incrementCounter(previousState, formData) {
-  return previousState + 1;
-}
+```http
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: <computed-hash>
+```
 
-export default function Counter() {
-  const [state, action, isPending] = useActionState(incrementCounter, 0);
+#### 3. Cryptographic Handshake Integrity
+To prevent caching proxies from incorrectly identifying the connection and to confirm that the server supports the protocol, the server processes the `Sec-WebSocket-Key` using the **GUID** `258EAFA5-E914-47DA-95CA-C5AB0DC85B11`.
 
-  return (
-    <form action={action}>
-      <button type="submit" disabled={isPending}>
-        Clicked {state} times
-      </button>
-    </form>
-  );
+**Modernized Node.js (v22+) Implementation:**
+
+```javascript
+import { createHash } from 'node:crypto';
+
+const MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
+
+/**
+ * Computes the Sec-WebSocket-Accept header value.
+ * @param {string} clientKey - Provided via Sec-WebSocket-Key header
+ */
+function computeAcceptHeader(clientKey) {
+    return createHash('sha1')
+        .update(clientKey + MAGIC_STRING)
+        .digest('base64');
 }
 ```
 
-**Audit Note:** The Class-based component example in the original content is now considered an anti-pattern. New projects must utilize functional patterns to leverage **Suspense** and **Streaming SSR** capabilities inherent in the modern React pipeline.
+*Note:* While SHA-1 is cryptographically weak for digital signatures, it is utilized here strictly for **handshake obfuscation** and protocol validation; it remains the standard per RFC 6455.
+
+#### 4. Post-Handshake Full-Duplex Framing
+Once the handshake is complete, data is exchanged via **frames**. These frames introduce a minimal header (2–14 bytes), significantly reducing overhead compared to standard HTTP/2 or HTTP/3 headers.
+
+*   **Complexity:** The frame parsing complexity is $O(1)$ relative to payload size, as the header structure is fixed-length once the payload length is determined.
+*   **Persistent State:** The TCP connection remains active until a `Close` control frame (opcode `0x8`) is received or a network timeout occurs.
+*   **Security (2026 Best Practice):** Always mandate **WSS (WebSocket Secure)** using **TLS 1.3** to ensure data integrity and confidentiality. Do not use unencrypted `ws://` in production environments.
 <br>
 
-## 2. How is _React_ different from _Angular_ or _Vue_?
+## 3. What are some common use cases for WebSockets?
 
-### Architectural Paradigm
-*   **React (19)**: A **library** for building user interfaces using a **Causal Decoder-only** conceptual model for rendering. It emphasizes **functional programming** paradigms via Hooks and the **React Compiler** (automatic memoization).
-*   **Angular (v19+)**: A **platform** utilizing a **Signals-based** reactivity system (replacing legacy `Zone.js` change detection). It mandates a strict **Dependency Injection** architecture.
-*   **Vue.js (3.x/4)**: A **progressive framework** utilizing a **Proxy-based** reactivity system. It bridges the gap between React’s composability and Angular’s template-first DX.
+### WebSockets (RFC 6455) Modernized Audit
 
-### Learning Curve
-*   **React**: Steepened in 2026 due to the required mastery of **Server Components (RSC)**, **Suspense**, and the transition to native asynchronous patterns.
-*   **Angular**: Flattened by **Standalone Components**, removing the necessity for `NgModules` which previously burdened beginners.
-*   **Vue.js**: Remains the most accessible due to the **Composition API** and its similarity to standard Web Components.
+**WebSockets** provide a persistent, full-duplex communication channel over a single TCP connection. In 2026, they remain the standard for low-latency, stateful communication, though often abstracted by higher-level protocols like **WebTransport** or **gRPC-Web** in specific enterprise architectures.
 
-### Performance & Rendering
-*   **React**: Shifted toward **Server-Side Rendering (SSR)** and **Partial Hydration**. Complexity of re-renders: $O(n)$ where $n$ is the number of component nodes; optimized via the **React Compiler** to minimize unnecessary diffing.
-*   **Angular**: The **Signals** API allows for granular updates ($O(1)$ component updates) by tracking state dependencies directly rather than diffing the entire component tree.
-*   **Vue.js**: Highly performant through **Virtual DOM** combined with **Static Hoisting** and **Patch Flags**, allowing the compiler to optimize dynamic content patching at $O(m)$ where $m$ is the number of dynamic nodes.
+### High-Frequency Use Cases
 
-### State Management
-*   **React**: Canonical approach is **Server Actions** and **React Query (TanStack)** for server state; **Zustand** or **Context** for client state. `setState` is effectively superseded by `useActionState` and `useOptimistic` hooks.
-*   **Angular**: **RxJS** is now optional in favor of **Signals**, which provide a more ergonomic, imperative-like syntax for reactive state without the complexity of streams.
-*   **Vue.js**: **Pinia** is the official standard, replacing Vuex. It is built natively for **TypeScript** and provides a modular, lightweight store architecture.
+*   **Collaborative Productivity (CRDT-based)**: Real-time conflict resolution using **Conflict-free Replicated Data Types (CRDTs)** for multi-user editing environments (e.g., decentralized text editors, Figma-like canvas engines).
+*   **Edge-Compute IoT Telemetry**: Bi-directional streaming for low-latency command-and-control loops in robotics and industrial IoT, typically leveraging **MessagePack** or **Protobuf** serialization to minimize payload overhead.
+*   **High-Frequency Trading (HFT) Interfaces**: Real-time order book synchronization. WebSockets remain preferred over **Server-Sent Events (SSE)** when bi-directional signaling (e.g., order cancellation) is required.
+*   **Live Multi-User Gaming**: State synchronization for game servers. While **WebRTC** is preferred for peer-to-peer data channels, WebSockets handle server-authoritative state broadcasting for massive concurrent sessions.
+*   **AI-Agent Orchestration**: Streaming token-by-token responses from LLM backends to frontend interfaces, minimizing Time to First Token (TTFT).
 
-### Templating & Composition
-*   **React**: **JSX** remains the industry standard. The trend is moving toward **Server Components**, where logic and UI are unified to reduce client-side bundle size.
-*   **Angular**: Uses **Template Syntax** with structural directives. The recent introduction of **Control Flow** (`@if`, `@for`) has replaced `*ngIf` and `*ngFor` for better type safety and performance.
-*   **Vue.js**: **Single-File Components (SFCs)** using `<script setup>` syntax are the industry best practice, offering the tightest integration between template logic and reactive state.
+### Technical Limitations & 2026 Alternatives
+*   **WebTransport (HTTP/3)**: For scenarios requiring **unreliable** delivery (datagrams), WebTransport is now the preferred successor to WebSockets, as it avoids Head-of-Line (HOL) blocking inherent in TCP.
+*   **Scalability**: WebSocket connections are stateful and consume memory per socket ($O(n)$ where $n = \text{connected clients}$). Modern implementations utilize **Redis Pub/Sub** or **NATS** as a message broker to decouple WebSocket gateway servers from application logic.
 
-### Tooling & Language Support
-*   **React**: **TypeScript** is ubiquitous. Tooling is highly dependent on the meta-framework (e.g., **Next.js** or **Remix**), which manages the LSP and build pipeline.
-*   **Angular**: **Angular Language Service** remains the gold standard for enterprise-grade IDE support, providing deep type-checking across templates and controllers.
-*   **Vue.js**: **Volar (Vue Language Tools)** provides best-in-class support for TypeScript inference within SFCs, often outperforming JSX-based tooling in template type-checking precision.
-<br>
+### 2026 Implementation Standard (Modernized)
 
-## 3. What is a _React component_?
+Modern implementations utilize **TypeScript** for type safety across the wire, often leveraging **Zod** for schema validation of incoming JSON payloads to prevent injection attacks or malformed data state errors.
 
-### React Component Definition (2026 Standard)
+```typescript
+// Modernized WebSocket implementation with Type Safety
+interface MarketUpdate {
+  symbol: string;
+  price: number;
+  timestamp: number;
+}
 
-A **React component** is the fundamental building block of modern React applications, encapsulating UI logic and structure. In the current ecosystem (React 19+), components are defined as **function components**. While class components remain technically supported for legacy compatibility, they are considered **deprecated architectural patterns** in favor of functional paradigms.
+const socket = new WebSocket('wss://api.exchange.com/v2/stream');
 
-#### Function Components vs. Legacy Class Components
+socket.addEventListener('open', () => {
+  const subscribeMsg = JSON.stringify({ action: 'subscribe', pair: 'BTC-USD' });
+  socket.send(subscribeMsg);
+});
 
-*   **Function Components**: The industry standard. These are JavaScript functions that accept `props` as an argument and return UI elements. They leverage **Hooks** to manage state, context, and side effects.
-*   **Class Components**: Legacy structures that use ES6 classes extending `React.Component`. These are now discouraged due to increased bundle sizes and complexities regarding `this` binding and lifecycle fragmentation.
+socket.addEventListener('message', (event: MessageEvent<string>) => {
+  try {
+    const data: MarketUpdate = JSON.parse(event.data);
+    // UI thread processing using requestAnimationFrame for 60/120fps smoothness
+    requestAnimationFrame(() => updateDashboard(data));
+  } catch (err) {
+    console.error('Schema validation failed:', err);
+  }
+});
 
-#### JSX and Modern Rendering
-
-*   **JSX**: A syntax extension to JavaScript that allows UI markup to be written within code. As of React 19, the `React.createElement` transformation is largely optimized by modern compilers (like SWC or Babel), transpiling JSX directly into highly performant virtual DOM nodes.
-*   **Server Components (RSC)**: The 2026 standard dictates that components are now differentiated by their execution environment. **Server Components** run exclusively on the server, reducing client-side bundle size, while **Client Components** handle interactivity via hooks.
-
-#### Structural Coherence
-
-React applications maintain a **hierarchical tree structure**. The entry point (e.g., `createRoot`) initiates the tree, which propagates updates through **Concurrent Rendering**. This allows React to prioritize urgent updates (like user input) over transitionary background tasks, improving perceived performance.
-
-#### Data Flow and State Management
-
-React enforces **unidirectional data flow**. Data (props) flows strictly from parent to child. 
-
-*   **Props**: Immutable data passed down the component tree.
-*   **State**: Reactive data managed via `useState` or `useReducer`. In modern React, state updates trigger a **re-render cycle** where React computes the "diff" between the previous and current Virtual DOM, applying only necessary patches ($O(n)$ complexity).
-*   **State Synchronization**: Modern state management often moves beyond simple `props` drilling, utilizing `useContext` or external reactive stores (e.g., Zustand, TanStack Query) to facilitate cross-tree data access without performance bottlenecks.
-
-#### Lifecycle Operations: The Hook Paradigm
-
-Lifecycle methods (`componentDidMount`, etc.) have been superseded by the `useEffect` hook and the broader **Effect API**. 
-
-*   **Declarative Synchronization**: Instead of imperative lifecycle hooks, modern components synchronize with external systems using declarative dependencies.
-*   **Suspense & Transitions**: React 19+ handles "loading" states and complex data fetching via `<Suspense>` boundaries. Rather than manually managing "mounting" status, components define their loading state declaratively, leading to a smoother user experience in data-intensive applications. 
-
-**Architectural Note**: As of 2026, the focus has shifted from "lifecycle management" to "synchronization with external state," prioritizing **Composition** over the inheritance models used in older class-based designs.
-<br>
-
-## 4. How do you create a _component_ in _React_?
-
-### Component Architecture in React (2026 Standards)
-
-Modern React development strictly prioritizes **Functional Components** using **Hooks**. While Class-based components remain supported for legacy compatibility, they are considered an anti-pattern in new feature development due to higher memory overhead and complex `this` binding behaviors.
-
-### Modern Implementation
-
-Functional components leverage **Hooks** (e.g., `useState`, `useEffect`) to manage state and side effects, replacing the legacy lifecycle methods (`componentDidMount`, `componentWillUnmount`).
-
-#### Functional Component Example (React 19+)
-
-```jsx
-// React 19 no longer requires explicit 'import React' for JSX
-const Greeting = ({ name }: { name: string }) => {
-  return <h1>Hello, {name}!</h1>;
-};
-
-export default Greeting;
+function updateDashboard(data: MarketUpdate): void {
+  const el = document.getElementById(`price-${data.symbol}`);
+  if (el) el.textContent = data.price.toFixed(2);
+}
 ```
 
-*Note: The use of **TypeScript** is the industry standard for 2026, providing static type checking for props and return types.*
+### Performance Metrics
+*   **Latency**: Typical round-trip time (RTT) for WebSockets is significantly lower than polling ($O(RTT)$ vs $O(RTT + \text{polling interval})$).
+*   **Memory Footprint**: Each open socket consumes approximately 10KB–50KB of RAM on the server side, necessitating efficient **load balancing** (e.g., NGINX, HAProxy) using sticky sessions if state is maintained at the application layer.
+<br>
 
-### Modern State and Lifecycle Management
+## 4. What are the limitations of WebSockets?
 
-In 2026, the industry has transitioned away from manual lifecycle management toward declarative synchronization. 
+### Limitations of WebSockets in 2026
 
-1.  **Hooks**: Logic is encapsulated in custom hooks, increasing **reusability** and **testability** compared to class methods.
-2.  **Server Components**: For performance optimization, components can now execute on the server, reducing the client-side JavaScript bundle size.
-3.  **Concurrency**: React 19 features, such as `useTransition` and `useActionState`, allow for non-blocking UI transitions and seamless form state management.
+**WebSockets (RFC 6455)** remain the industry standard for full-duplex communication. However, the shift toward **HTTP/3 (QUIC)** and serverless paradigms necessitates a re-evaluation of their role in modern architectures.
 
-### Development Standards: Linting and Formatting
+#### Connection Lifecycle & Resource Management
+*   **Persistent Resource Consumption**: Unlike the request-response model of HTTP/1.1 or the multiplexed streams of HTTP/2 and HTTP/3, WebSockets maintain stateful TCP connections. Each connection consumes a socket file descriptor and memory on the server. At scale, this leads to $O(N)$ memory complexity where $N$ is the number of concurrent users, complicating horizontal scaling without an external message broker (e.g., Redis Pub/Sub, NATS).
+*   **State Persistence & Serverless**: WebSocket persistence is fundamentally incompatible with the ephemeral nature of **Serverless Functions (FaaS)**. Solutions like *AWS API Gateway WebSocket APIs* or *Azure Web PubSub* effectively abstract this, but they introduce vendor lock-in and additional latency overhead for the handshake/upgrade process.
 
-Modern ecosystems rely on **ESLint (Flat Config)** and **Biome** or **Prettier** to enforce code quality.
+#### Infrastructure & Network Constraints
+*   **Middlebox Interference**: While HTTP/3 over QUIC bypasses TCP head-of-line blocking, WebSockets are bound to TCP. Older firewalls, Deep Packet Inspection (DPI) proxies, and restrictive corporate gateways often terminate or drop long-lived WebSocket connections, necessitating aggressive heartbeat/keep-alive strategies.
+*   **Load Balancing Complexity**: Conventional Layer 7 load balancers require "sticky sessions" or WebSocket-aware routing to maintain the stateful pipe. In contrast, modern **Service Meshes (Istio/Linkerd)** handle this, but misconfiguration often leads to silent connection drops during deployment rolling updates.
 
-*   **TypeScript Integration**: Strict mode is mandated to ensure type safety, reducing runtime errors.
-*   **Component Composition**: Architecture patterns favor **Composition over Inheritance**. Complex behaviors are abstracted into reusable Hooks rather than High-Order Components (HOCs) or Render Props.
-*   **Modern Formatting**: The Airbnb style guide has largely been superseded by community-driven standards that emphasize **readability** and **zero-config** setups (e.g., Vite/Turbopack ecosystems).
+#### Protocol Efficiency vs. Alternatives
+*   **HTTP/3 and WebTransport**: **WebTransport (RFC 9218)** is the 2026 successor to WebSockets for high-throughput, low-latency requirements. It provides unreliable (datagram-based) and reliable stream-based communication over HTTP/3, mitigating head-of-line blocking issues present in WebSocket’s TCP foundation.
+*   **Overkill for Simple Updates**: For unidirectional "server-to-client" streams, **Server-Sent Events (SSE)** remain superior. SSE is lighter, operates over standard HTTP/2 streams, and features automatic reconnection natively, reducing the boilerplate code required for WebSockets.
+
+#### Security & Compliance
+*   **Authentication Fragility**: WebSockets do not support standard HTTP headers (like `Authorization: Bearer <token>`) during the `101 Switching Protocols` handshake in browser environments. Developers must often pass tokens as query parameters, which are susceptible to leakage in server logs and browser history. **Subprotocol negotiation** or cookie-based auth is preferred, but requires careful CSRF mitigation.
+*   **Privacy Regulation (GDPR/CCPA)**: Persistent connections make "Right to be Forgotten" requests more complex. Real-time data streams must be actively tracked in memory to ensure immediate termination upon user request or session expiration to maintain compliance.
+
+#### Mobile & Connectivity
+*   **Battery and Radio State**: Maintaining a persistent TCP connection keeps the mobile radio in a high-power state longer. In regions with unstable 5G/6G signals, frequent reconnection cycles (the "thundering herd" problem) can significantly degrade mobile device battery life compared to HTTP-based polling or Push Notifications (APNs/FCM).
+
+#### Summary Table: 2026 Protocol Comparison
+
+| Feature | WebSockets | HTTP/3 (WebTransport) | SSE |
+| :--- | :--- | :--- | :--- |
+| **Transport** | TCP | QUIC | HTTP/2+ |
+| **Full-Duplex** | Yes | Yes | No |
+| **Complexity** | Moderate | High | Low |
+| **Use Case** | Real-time gaming/Chat | High-perf streaming | Real-time dashboards |
+
+#### Recommendation
+For new greenfield projects in 2026:
+1. Use **SSE** for uni-directional server-to-client updates.
+2. Use **WebTransport** for high-performance, low-latency bidirectional requirements.
+3. Use **WebSockets** only when legacy browser compatibility (pre-2023 environments) or broad ecosystem library support is a critical business constraint.
+<br>
+
+## 5. Can you describe the WebSocket API provided by HTML5?
+
+### Technical Audit: WebSocket API (2026 Standards)
+
+**WebSocket** is a stateful, **full-duplex** communication protocol standardized in **RFC 6455**. It operates over a single, persistent TCP connection, bypassing the overhead of HTTP/1.1 request-response cycles. While originally introduced as part of the HTML5 suite, it is now an independent IETF standard.
+
+### Key Aspects of WebSockets
+
+- **Protocol Upgrade**: Initiated via an **HTTP/1.1 GET request** featuring specific `Upgrade: websocket` and `Sec-WebSocket-Key` headers. Post-handshake, the connection upgrades to a binary framing layer.
+- **Bi-directional Framing**: Data is partitioned into **frames** (text, binary, ping, pong, close). Framing allows for fragmented message delivery, maintaining $O(1)$ overhead per frame header compared to HTTP overhead.
+- **Browser Native Stack**: Fully integrated into the **Web API** (WHATWG Living Standard). Modern architectures prefer `wss://` (WebSocket Secure) to ensure TLS encryption, mandatory for production deployment.
+
+### WebSocket Lifecycle
+
+1. **The Handshake**: Client sends an HTTP GET request with `Upgrade` headers. Server validates via `Sec-WebSocket-Accept` (SHA-1 hashing of the client's key).
+2. **Persistent State**: Unlike HTTP/3 (QUIC-based), which optimizes streams, WebSocket provides a raw, long-lived pipe. For load balancing, **sticky sessions** or **Redis-based pub/sub** backplanes are required for horizontal scaling.
+3. **Data Transmission**: Messages are sent as continuous frames. Binary data (e.g., `ArrayBuffer`, `Blob`) is natively supported, making it superior to HTTP for high-frequency binary data (e.g., WebRTC signaling, binary serialization like Protobuf).
+4. **Termination**: Controlled shutdown via `CloseFrame` (opcode `0x8`). Abrupt network failure triggers an `onerror` event followed by `onclose`.
+
+### 2026 Modern Considerations
+
+- **WebSocket vs. WebTransport**: For 2026-era high-performance needs, **WebTransport** (built on HTTP/3) is preferred over WebSockets for scenarios requiring unreliable delivery or multi-streaming without head-of-line blocking.
+- **Resource Management**: WebSocket connections consume server memory per-socket. Audit implementations for **backpressure** support to prevent buffer overflows during high-throughput bursts.
+
+### Revised Code Example (ES2026+)
+
+```javascript
+// Using modern Class-based architecture and Optional Chaining
+class SocketClient {
+  constructor(url) {
+    this.socket = new WebSocket(url);
+    this.init();
+  }
+
+  init() {
+    this.socket.addEventListener('open', () => console.log('Connected'));
+    this.socket.addEventListener('message', ({ data }) => this.handle(data));
+    this.socket.addEventListener('error', (err) => console.error(err));
+  }
+
+  handle(data) {
+    // Handling Blob/ArrayBuffer natively
+    if (data instanceof Blob) {
+      data.text().then(text => console.log('Received:', text));
+    }
+  }
+
+  send(payload) {
+    if (this.socket.readyState === WebSocket.OPEN) {
+      this.socket.send(payload);
+    }
+  }
+}
+
+const client = new SocketClient('wss://api.example.com/v2/stream');
+```
+
+### Key Use-Cases
+
+- **Real-Time Data Streaming**: Financial tickers, live analytics.
+- **Collaborative CRDTs**: Maintaining shared state (e.g., Yjs/Automerge) in multi-user document editors.
+- **Signaling Layer**: Providing the "handshake" mechanism for **WebRTC** Peer-to-Peer connections.
+- **IoT Telemetry**: Low-latency sensor data ingestion with minimal framing latency.
+<br>
+
+## 6. Explain the WebSocket frame format.
+
+### WebSocket Frame Architecture (RFC 6455 Refined)
+
+The **WebSocket frame** protocol enables full-duplex communication over a single TCP connection. Modern implementations (2026+) prioritize high-throughput data framing and strict security hygiene, particularly regarding masking and frame fragmentation.
+
+#### Initial Header and Control Bits
+
+Every frame begins with a fixed 2-byte sequence. The first byte identifies the fragment state and opcode, while the second byte dictates the **Mask** bit and initial payload length.
+
+```plaintext
+ 0                   1
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
++-+-+-+-+-------+---------------+
+|F|R|R|R| opcode|M| Payload len |
+|I|S|S|S|  (4)  |A|     (7)     |
+|N|V|V|V|       |S|             |
++-+-+-+-+-------+---------------+
+```
+
+*   **FIN (1 bit):** Indicates the final fragment of a message.
+*   **RSV1-3 (3 bits):** Reserved for protocol extensions (e.g., per-message `deflate` compression). Must be $0$ unless an extension is negotiated.
+*   **OPCODE (4 bits):**
+    *   `0x0`: Continuation
+    *   `0x1`: Text (UTF-8)
+    *   `0x2`: Binary
+    *   `0x8`: Connection Close
+    *   `0x9`: Ping
+    *   `0xA`: Pong
+*   **MASK (1 bit):** If set to $1$, a $32$-bit masking key follows. Per RFC 6455, clients **must** mask all frames sent to servers. Servers **must not** mask frames sent to clients.
+
+#### Extended Header Logic
+
+The payload length field (7 bits) determines the necessity of extended length bytes:
+*   **0–125:** The value is the payload length.
+*   **126:** The following $16$ bits ($2$ bytes) represent the payload length (unsigned big-endian).
+*   **127:** The following $64$ bits ($8$ bytes) represent the payload length.
+
+#### Payload and Masking
+
+The payload data consists of the **Extension Data** (if any) followed by the **Application Data**. 
+
+**Masking Mechanics:**
+If the mask bit is set, the payload is XORed with a $32$-bit masking key ($masking\_key$). The transformation for the $i$-th byte of data ($transformed\_octet_i$) is:
+
+$$transformed\_octet_i = original\_octet_i \oplus masking\_key[i \pmod 4]$$
+
+This mechanism provides no cryptographic security; it exists exclusively to prevent cross-protocol attacks on intermediary proxies that might otherwise interpret malicious binary data as legitimate HTTP requests.
+
+#### Example Interpretation (2026 Context)
+
+Consider a binary frame: **FIN=1, Opcode=0x2 (Binary), Mask=0, Payload=75 bytes of 'A' (0x41).**
+
+1.  **Byte 0:** `10000010` ($0x82$). (FIN set, Binary opcode).
+2.  **Byte 1:** `01001011` ($0x4B$). (Mask bit 0, Length 75).
+3.  **Payload:** $75$ bytes of `0x41`.
+
+**Modern Implementation Note:** In 2026 production environments (e.g., using Node.js `ws` or Python `websockets` libraries), developers rarely interact with raw frames. High-level abstractions handle fragmentation and masking internally. Audits should focus on the **RSV1 bit** usage, as modern performance-critical applications heavily utilize the `permessage-deflate` extension ($RSV1=1$) to reduce bandwidth by $O(n)$ relative to compression ratios.
+<br>
+
+## 7. How do WebSockets handle communication through proxies and firewalls?
+
+### WebSockets and Network Intermediaries (2026 Standards)
+
+**WebSockets** (RFC 6455) provide persistent, full-duplex communication channels over a single TCP connection. In 2026, architectural designs must account for the prevalence of **HTTP/3 (QUIC)** and sophisticated **Layer 7 (L7) firewalls**.
+
+### Proxies and Intermediaries
+
+*   **HTTP/1.1 Upgrade Mechanism**: WebSockets initiate via an HTTP `GET` request containing the `Upgrade: websocket` and `Connection: Upgrade` headers. Older, non-WebSocket-aware proxies often fail to propagate these headers, leading to a `400 Bad Request` or `502 Bad Gateway`. 
+*   **Protocol Negotiation**: Modern proxies act as **WebSocket-aware gateways**. They participate in the HTTP handshake to maintain statefulness. If an intermediary does not explicitly support the `Upgrade` mechanism, it will drop the connection.
+*   **Connection Multiplexing and HTTP/2+**: While HTTP/1.1 proxies struggle with long-lived WebSocket streams (causing timeout-induced closures), **HTTP/2 and HTTP/3 (QUIC)** proxying handles multiplexing more efficiently. However, WebSocket-over-HTTP/2 (RFC 8441) is the required standard for modern infrastructure to prevent head-of-line blocking at the proxy level.
+
+### Firewalls and Content Inspection
+
+*   **Port Utilization**: Industry standards mandate WebSocket traffic over **WSS (WebSocket Secure)** using port **443**. Firewalls configured for HTTPS traffic generally permit WSS traffic as the handshake and subsequent framing are opaque to stateful inspection engines once the TLS tunnel is established.
+*   **Deep Packet Inspection (DPI)**: Sophisticated L7 firewalls perform **TLS Termination**. By decrypting traffic, these firewalls can inspect individual WebSocket frames. If the WebSocket payload violates security policies (e.g., unauthorized protocol tunneling), the firewall will send a `TCP RST` to terminate the connection.
+*   **Idle Timeout Policies**: Firewalls often terminate TCP connections that appear idle. Modern WebSocket implementations must utilize **Ping/Pong control frames** (every 30–60 seconds) to maintain state and prevent silent session teardown by middleboxes.
+
+### Addressing Challenges: 2026 Best Practices
+
+*   **Encapsulation via TLS**: TLS 1.3 is the mandatory transport layer. It provides **Forward Secrecy**, rendering content inspection significantly more difficult for firewalls unless they perform man-in-the-middle (MITM) proxying with enterprise-trusted root certificates.
+*   **Fallback Strategies**: In high-restriction environments, **WebSockets-over-HTTPS** acts as the baseline. If connectivity fails due to protocol-specific blocking, applications should fall back to **WebTransport** (via HTTP/3), which provides low-latency communication that is natively compatible with modern QUIC-based network infrastructure.
+
+### Modern Implementation (Python 3.14+)
+
+In 2026, `websockets` (asyncio-native) is the preferred library. It handles frame-level management and heartbeat (ping/pong) mechanisms automatically, crucial for maintaining proxy transparency.
+
+```python
+import asyncio
+import websockets
+import ssl
+
+# Define SSL context for secure TLS 1.3 tunneling
+ssl_context = ssl.create_default_context()
+
+async def connect_proxy():
+    uri = "wss://api.example.com/v1/socket"
+    
+    # Standard 2026 approach: Use context manager for robust lifecycle
+    async with websockets.connect(
+        uri, 
+        ssl=ssl_context,
+        ping_interval=30,  # Prevent firewall idle timeouts
+        ping_timeout=10
+    ) as websocket:
+        
+        await websocket.send("Client-Hello")
+        response = await websocket.recv()
+        print(f"Received: {response}")
+
+# Execute within asyncio event loop
+if __name__ == "__main__":
+    asyncio.run(connect_proxy())
+```
 
 ### Technical Audit Summary
+*   **Deprecation Warning**: Avoid manual `websocket-client` (threading-based) in high-concurrency environments; use `asyncio` for performance efficiency.
+*   **Standard Compliance**: Ensure all production endpoints support **RFC 8441** for seamless traversal through HTTP/2-enabled proxies.
+*   **Complexity**: WebSocket connection establishment involves an $O(1)$ handshake transition, but maintaining state in NAT environments requires $O(n)$ heartbeats over the connection lifetime.
+<br>
 
-| Feature | Legacy Status | 2026 Standard |
+## 8. What are the security considerations when using WebSockets?
+
+### Security Considerations for WebSocket Architecture (2026)
+
+Persistent connections shift the security boundary from request-based validation to session-state validation. Modern implementations must account for long-lived transport layers and the mitigation of asymmetric resource consumption.
+
+#### Key Security Concerns
+
+*   **Cross-Site WebSocket Hijacking (CSWSH)**: Unlike standard CORS, the WebSocket handshake does not automatically enforce same-origin policies. The `Origin` header must be strictly validated against a whitelist of trusted schemes and hostnames. Failure to validate the `Origin` allows cross-site scripts to initiate unauthorized persistent connections.
+*   **Input Sanitization (Protocol-Level)**: WebSockets transport raw binary or text frames. Since the persistent nature allows for high-frequency streaming, perform **schema validation** (e.g., using Protocol Buffers or JSON Schema) at the application layer to prevent injection attacks (SQLi, Command Injection) that bypass traditional HTTP middleware.
+*   **Resource Exhaustion & Rate Limiting**: Persistent connections bypass standard per-request firewall rules. Implement **backpressure management** and concurrency limits per IP address to mitigate $O(n)$ connection-exhaustion DDoS attacks. Enforce idle timeouts to prevent "zombie" connections from consuming file descriptors.
+*   **Transport Layer Security (TLS)**: Always utilize `wss://` (WebSocket Secure). Standard `ws://` connections are susceptible to Man-in-the-Middle (MitM) attacks and packet sniffing. TLS 1.3 is the mandated baseline in 2026.
+*   **Authentication & Session Management**: Authentication should occur during the initial HTTP handshake (e.g., via Secure/HttpOnly Cookies or short-lived Bearer tokens). Once established, the server must map the persistent connection to an authenticated identity, ensuring that subsequent messages within the stream are strictly verified against the session owner's permissions.
+*   **Message Size & Framing Attacks**: Enforce strict frame-size limits. A malicious client could stream massive payloads to induce heap exhaustion. Implement a `maxPayloadLength` threshold at the server’s WebSocket handler level.
+
+#### Modernized Implementation (Node.js/ws)
+
+In 2026, origin verification and frame-size limiting are critical defense-in-depth measures.
+
+```javascript
+// Server (Node.js 22+ with 'ws' 8.x+)
+const { WebSocketServer } = require('ws');
+const wss = new WebSocketServer({ 
+  port: 8080,
+  maxPayload: 1024 * 16, // 16KB limit to prevent memory exhaustion
+  verifyClient: (info, cb) => {
+    const origin = info.origin;
+    if (isAllowedOrigin(origin)) {
+      cb(true); // Accept connection
+    } else {
+      cb(false, 403, 'Forbidden');
+    }
+  }
+});
+
+function isAllowedOrigin(origin) {
+  const allowed = ['https://trusted.app'];
+  return allowed.includes(origin);
+}
+
+wss.on('connection', (ws, req) => {
+  // Session established. 
+  // Perform secondary validation if using JWT/Tokens extracted from headers/cookies
+  ws.on('message', (data) => {
+    // Validate data schema here (e.g., Joi or Zod)
+  });
+});
+```
+
+```javascript
+// Client (Browser Standard API)
+// Always use 'wss' for encrypted transmission.
+const ws = new WebSocket('wss://api.example.com/v1/socket');
+
+ws.onmessage = (event) => {
+  // Never interpret message data as executable code (e.g., avoid eval())
+  const payload = JSON.parse(event.data);
+  processUpdate(payload);
+};
+```
+
+#### Audit Summary
+1.  **Transport**: Moved from `ws://` (unencrypted) to mandatory `wss://`.
+2.  **Origin Validation**: Leveraged `verifyClient` hook to terminate unauthenticated handshakes before resource allocation.
+3.  **Stability**: Introduced `maxPayload` constraints to prevent buffer overflow/DoS vectors.
+4.  **Security Posture**: Emphasized that session context must be validated per-frame, as state persists beyond the initial handshake.
+<br>
+
+## 9. How would you detect and handle WebSocket connection loss?
+
+### Connection Monitoring
+
+1. **Native Heartbeats**: Utilize the browser-native `WebSocket.ping()` and `pong` events (if supported by the specific protocol implementation) or implement application-layer heartbeat frames. Standardize on an interval $I$ (typically 30s) and a timeout $T < I$.
+2. **Server-Side Monitoring**: Deploy **Prometheus** exporters to track `active_connections` via socket gauges. In 2026, utilize **OpenTelemetry** trace spans to correlate socket lifecycle events with downstream microservice latency.
+3. **Client-Side Tracking**: Utilize the `onclose` and `onerror` event listeners. For React 19+ environments, wrap socket logic in `useSyncExternalStore` or custom hooks to ensure state consistency across the component tree.
+
+### Identifying Disconnection Causes
+
+1. **Graceful Closure**: Indicated by Close Code `1000` (Normal Closure).
+2. **Abnormal Disconnection**: Indicated by Close Code `1006` (No close frame received). This usually signifies a TCP-level timeout, NAT table expiration, or physical network failure.
+3. **Protocol Errors**: Indicated by codes `1002` (Protocol error) or `1009` (Message too large). These require client-side logic updates rather than reconnection.
+
+### Reconnection Strategies
+
+1. **Jittered Exponential Backoff**: Prevent "Thundering Herd" syndrome by adding a random factor to the backoff. 
+   The delay $D$ is calculated as: $D = \min(base \times 2^n, max\_delay) + \text{jitter}$, where $n$ is the attempt count and $\text{jitter} \in [0, \text{base}]$.
+2. **State Synchronization**: Upon reconnection, the client must perform a state-sync handshake to retrieve missed events during the offline window (e.g., requesting a delta-payload based on the last processed sequence ID).
+3. **Visibility API Integration**: Utilize `document.visibilityState`. Pause or reduce heartbeat frequency when the page is hidden to save energy and reduce server overhead.
+
+### Modernized Code Example (TypeScript/React 19)
+
+```typescript
+const RECONNECT_BASE = 2000;
+const MAX_DELAY = 30000;
+
+function useWebSocket(url: string) {
+  const [ws, setWs] = useState<WebSocket | null>(null);
+  const attempt = useRef(0);
+
+  const connect = useCallback(() => {
+    const socket = new WebSocket(url);
+
+    socket.onopen = () => {
+      attempt.current = 0;
+      console.log('Connected');
+    };
+
+    socket.onclose = (event) => {
+      if (event.code === 1000) return;
+
+      const delay = Math.min(RECONNECT_BASE * 2 ** attempt.current, MAX_DELAY) + Math.random() * 1000;
+      setTimeout(connect, delay);
+      attempt.current++;
+    };
+
+    setWs(socket);
+  }, [url]);
+
+  useEffect(() => {
+    connect();
+    return () => ws?.close();
+  }, [connect]);
+}
+```
+
+### 2026 Auditor Notes
+*   **Performance**: Avoid frequent polling; rely on TCP Keep-Alive settings configured at the load balancer (e.g., NGINX `proxy_read_timeout` / AWS NLB idle timeouts) to drop dead connections.
+*   **Security**: Ensure all WebSocket upgrades originate from `wss://` (TLS 1.3).
+*   **Complexity**: Reconnection logic maintains $O(1)$ space complexity, but server-side connection state management during widespread reconnect events is $O(N)$ where $N$ is the number of concurrent clients. Ensure server-side rate limiting on the `/ws` handshake endpoint.
+<br>
+
+## 10. Explain the role of ping/pong frames in WebSockets.
+
+### Role of Ping/Pong Frames in WebSockets (RFC 6455)
+
+**Ping** (Opcode `0x9`) and **Pong** (Opcode `0xA`) frames are **Control Frames** within the WebSocket protocol designed for **Liveness Monitoring** and **Path Maintenance**. They operate independently of the data stream, ensuring the underlying TCP connection remains viable in the presence of middleboxes (NATs, load balancers, and firewalls).
+
+#### Purpose and Operational Necessity
+
+1. **Connection Keep-Alive (Liveness):** Stateful firewalls often drop idle TCP connections after a predetermined TTL (Time-To-Live). Periodic Ping frames reset these timers, preventing abrupt connection termination.
+2. **Dead Peer Detection:** If a network path fails or a client silently disconnects (e.g., mobile radio sleep), the Pong response absence allows the server to identify "zombie" connections. The server can then initiate `Close` frames to reclaim file descriptors and memory.
+3. **Latency Probing:** By including a timestamp in the application data payload, endpoints can measure Round-Trip Time (RTT) to assess network health and adjust congestion control parameters.
+
+#### Frame Architecture (RFC 6455 Specification)
+
+Control frames must have a payload length $\le 125$ bytes and cannot be fragmented. 
+
+| Frame Type | Opcode (Hex) | Description |
 | :--- | :--- | :--- |
-| **Component Type** | Class-based | Functional (Hooks) |
-| **Type Checking** | PropTypes | TypeScript (Interface/Types) |
-| **Data Fetching** | `componentDidMount` | `use` API / TanStack Query |
-| **Rendering** | Client-Side (CSR) | Server Components (RSC) / Streaming |
+| **Ping** | `0x9` | Request for peer verification. |
+| **Pong** | `0xA` | Unsolicited or solicited response to a Ping. |
 
-#### Key Takeaways
+**Hexadecimal Structure:**
+A Ping frame with no payload is represented as:
+`89 00` (FIN bit set, Opcode 9, Mask bit 0, Payload Length 0).
 
-*   **Functional Components** are the standard; avoid classes in new architecture.
-*   **TypeScript** is essential for maintaining large-scale codebases.
-*   **Composition** is the primary mechanism for logic reuse; prioritize Custom Hooks.
-*   **Performance** is optimized via Server Components and concurrent rendering features.
-<br>
+*Note:* Per RFC 6455 Section 5.5.3, a Pong frame **must** be sent in response to a Ping frame as soon as possible, mirroring the "Application Data" payload of the received Ping.
 
-## 5. What is _JSX_ and why do we use it in _React_?
+#### Modern Security Considerations
 
-### JSX in React 19+
+* **Resource Exhaustion:** Rapid, high-frequency Pings are a vector for **DDoS (Distributed Denial of Service)**. Implement rate-limiting at the application layer or via an ingress controller (e.g., NGINX/Envoy) to drop connections exceeding a predefined ping-rate threshold.
+* **Payload Mirroring:** Since Pong frames echo the Ping payload, they are not suitable for authentication tokens or sensitive data. Do not treat Pong responses as proof of identity; they only verify path connectivity.
 
-**JSX** (JavaScript XML) is a syntax extension for JavaScript that provides a declarative way to describe the UI structure. While it resembles HTML, it is a syntactic sugar for function calls that compile into the React element tree.
+#### Modern Implementation (Python 3.14+ / `websockets` 15.0+)
 
-### Technical Foundations
+In current asynchronous paradigms, the `websockets` library handles Ping/Pong heartbeats automatically via the `ping_interval` and `ping_timeout` configuration parameters. Manual invocation is typically unnecessary.
 
-*   **Syntactic Sugar**: JSX is not HTML; it is an abstraction over `React.createElement` (or the newer `jsx()` transform introduced in React 17+).
-*   **Expression Embedding**: Developers can embed arbitrary JavaScript expressions within curly braces `{}`. The React runtime handles the evaluation and injection of these expressions into the VDOM.
-*   **Transpilation**: Modern build tools (Vite, SWC, or Babel) transform JSX into standard JavaScript during the build phase. SWC, written in Rust, is the 2026 standard for high-performance JSX transpilation.
+```python
+import asyncio
+import websockets
 
-### Key Features
+async def connection_manager():
+    # Automatically manages keep-alive pings every 20 seconds
+    # Closes connection if Pong is not received within 10 seconds
+    async with websockets.connect(
+        "wss://api.example.com",
+        ping_interval=20,
+        ping_timeout=10
+    ) as ws:
+        async for message in ws:
+            print(f"Data received: {message}")
 
-*   **Declarative UI**: By aligning code structure with the DOM hierarchy, JSX reduces cognitive load, mapping component logic directly to the rendered output.
-*   **Type-Safe Elements**: When coupled with TypeScript, JSX provides full **type inference** for component props, ensuring that the interface contracts are enforced during the compilation phase ($O(n)$ complexity for type checking against the component's signature).
-*   **Component Composition**: JSX facilitates the composition of complex UIs by allowing the nesting of custom components just like standard intrinsic elements.
-
-### Benefits of Modern JSX
-
-*   **Performance Optimization**: React 19’s compiler can perform advanced **memoization** and **hoisting** optimizations directly on JSX structures, reducing the overhead of re-renders.
-*   **Developer Experience (DX)**: IDEs (VS Code/Cursor) utilize the JSX structure to provide robust IntelliSense, refactoring capabilities, and real-time linting.
-*   **Reduced Boilerplate**: JSX eliminates the verbosity of manual functional calls, replacing deeply nested `React.createElement` chains with readable, declarative trees.
-
-### Code Example: JSX and Transpiled Output
-
-**JSX (React 19 syntax)**:
-```jsx
-// Direct usage of the new JSX transform
-const element = <h1 className="title">Hello, World!</h1>;
+if __name__ == "__main__":
+    asyncio.run(connection_manager())
 ```
 
-**Transpiled JavaScript (React 19 Runtime)**:
-```javascript
-import { jsx as _jsx } from "react/jsx-runtime";
-
-// The modern transform removes the need to import 'React' in every file
-const element = _jsx("h1", { className: "title", children: "Hello, World!" });
-```
-
-### Why Use JSX in 2026?
-
-*   **Ecosystem Alignment**: The entire React ecosystem (Server Components, Suspense, Hooks) is built around JSX. Deviating from JSX restricts access to the latest framework features and community-maintained UI libraries.
-*   **Compile-Time Verification**: JSX allows build tools to detect missing props or invalid tag structures before the code ever reaches the browser, drastically reducing runtime errors.
-*   **Declarative Consistency**: JSX provides a unified language for both Client Components and React Server Components (RSC), allowing for a seamless transition between server-side rendering and client-side interactivity.
-*   **Tooling Optimization**: The 2026 build stack is optimized specifically for JSX. Using JSX allows tools like the React Compiler to analyze your component graph statically, resulting in significant runtime performance gains compared to non-JSX approaches.
+#### Complexity Analysis
+* **Memory Overhead:** $O(1)$ per connection, as ping frames are transient and non-buffered.
+* **Network Overhead:** $O(k)$ where $k$ is the frequency of pings. The protocol ensures this is minimal, as control frames share the existing TCP socket rather than establishing new handshakes.
 <br>
 
-## 6. Can you explain the _virtual DOM_ in _React_?
+## 11. How does WebSocket ensure ordered delivery of messages?
 
-### Virtual DOM: 2026 Technical Audit
+### WebSocket Ordered Delivery Mechanisms
 
-The **Virtual DOM (VDOM)** remains a fundamental architectural pattern in React, though its implementation has evolved significantly with the introduction of **React Fiber** and concurrent rendering primitives. It serves as a declarative blueprint for the UI, allowing React to decouple UI state from expensive imperative browser DOM manipulations.
+**WebSocket** ensures ordered delivery by leveraging the inherent stream-based guarantees of **TCP** (Transmission Control Protocol) and the **WebSocket Framing Protocol** (RFC 6455).
 
-### Refined Mechanism
+#### The Role of TCP Layering
+WebSockets operate over a single, long-lived TCP connection. **TCP** provides the foundational guarantee of ordered delivery through the following mechanisms:
 
-1. **Initial Rendering**: React creates a **Fiber tree**, a internal data structure representing the component tree. Each Fiber node corresponds to a React component or DOM element, holding state, props, and side effects.
+*   **Sequence Numbers**: Every byte transmitted is assigned a unique sequence number.
+*   **Acknowledgment (ACK)**: The receiver acknowledges receipt of segments; if a gap in sequence numbers is detected, the receiver buffers out-of-order packets and requests retransmission of missing segments.
+*   **In-Order Delivery**: The TCP stack ensures that segments are delivered to the application layer (the WebSocket implementation) only after all preceding segments have been successfully received and reassembled.
 
-2. **Reconciliation (The Diffing Algorithm)**: When state updates occur, React triggers a re-render. It performs a tree comparison between the current Fiber tree and the new structure. React uses a heuristic $O(n)$ algorithm, assuming that components of the same type produce similar trees, to minimize computational overhead.
+#### Full-Duplex Communication
+Unlike the HTTP/1.1 request-response cycle, the WebSocket protocol maintains a persistent **full-duplex** channel. This prevents "head-of-line blocking" at the HTTP application level by allowing asynchronous traffic flow, while the underlying TCP connection maintains strict serial integrity for that specific bidirectional stream.
 
-3. **Fiber Architecture**: Unlike older versions, the 2026 reconciliation process is **incremental and interruptible**. React can pause, abort, or reuse work on the component tree to prioritize urgent updates (e.g., user input) over background tasks (e.g., data fetching), maintaining high frame rates.
+#### WebSocket Framing and Message Integrity
+When a WebSocket message exceeds the frame buffer size or is fragmented, the **WebSocket Framing Protocol** ensures reconstruction via the **FIN (Final)** bit:
 
-4. **Batched Transitions**: React 19+ utilizes `useTransition` and `useDeferredValue` to categorize updates. State changes are grouped into **transitions**, ensuring that lower-priority updates do not block the main thread, effectively decoupling logic from rendering.
+1.  **Fragmentation**: If a message is too large or requires streaming, the sender splits the payload into multiple frames.
+2.  **Opcode Tracking**: The first frame uses a specific **opcode** (e.g., `0x1` for text, `0x2` for binary), while subsequent fragments use the **continuation opcode** (`0x0`).
+3.  **FIN Bit**: The `FIN` bit is set to `0` for all non-final fragments and `1` for the last fragment. 
+4.  **Reconstruction**: The endpoint buffers the payloads of frames with `FIN=0` until the frame with `FIN=1` is received, at which point the message is processed as a discrete unit.
 
-5. **Commit Phase**: Once reconciliation is complete, React enters the "Commit Phase." Here, it applies changes to the actual DOM in a single pass. By batching these operations, React minimizes **layout thrashing** and forced synchronous reflows.
-
-6. **Concurrent Rendering**: Modern React renders components "concurrently," meaning multiple versions of the UI can be prepared in memory simultaneously. The VDOM acts as a scratchpad where React experiments with changes before "committing" them to the screen, providing a seamless transition between states.
-
-7. **Declarative DOM Abstraction**: Direct DOM manipulation (e.g., `document.getElementById`) is considered an anti-pattern. React provides `useRef` for necessary imperative escapes, but the VDOM ensures that the source of truth remains within the React component lifecycle, preventing synchronization desyncs.
-
-8. **Universal Reconciliation**: The VDOM is platform-agnostic. While `react-dom` handles browser-specific updates, the reconciliation logic is reused by `react-native` (via native bridge) and `react-three-fiber` (via custom renderers), providing a consistent declarative API across platforms.
-
-### Performance Complexity
-The efficiency of the VDOM is rooted in:
-* **Heuristic Diffing**: Reduces tree comparison from $O(n^3)$ to $O(n)$ by utilizing key properties on lists and component type comparisons.
-* **Batching**: Reduces the constant factor of DOM writes, which are typically $O(DOM\_nodes\_changed)$, by grouping them into a single browser reflow cycle.
-<br>
-
-## 7. What are the differences between a _class component_ and a _functional component_?
-
-### Technical Audit: Component Architecture (2026 Standards)
-
-In 2026, **Functional Components** are the industry standard for all new development. **Class Components** are considered legacy and should be avoided in modern React 19+ applications.
-
-### Core Distinctions
-
-**Class Components (Legacy)**:
-*   Defined by extending `React.Component` or `React.PureComponent`.
-*   Relies heavily on the `this` keyword, which often leads to complex binding issues.
-*   Encapsulates state in an object-based `this.state`.
-*   Uses imperative lifecycle methods (e.g., `componentDidMount`, `componentDidUpdate`).
-
-**Functional Components (Modern)**:
-*   Defined as pure JavaScript functions.
-*   Stateless by nature but achieve state/effect persistence via **Hooks**.
-*   Eliminates the `this` binding overhead.
-*   Optimized for modern compiler features like **React Forget** (Automatic Memoization).
-
-### Detail Evaluation
-
-#### Code Structure
-*   **Class Components**: Requires a `render()` method returning JSX. Complex components often result in "wrapper hell" due to the limitations of inheritance and Higher-Order Components (HOCs).
-*   **Functional Components**: Direct return of JSX. Employs **Composition** and **Custom Hooks** to extract logic, resulting in a cleaner, flatter component tree.
-
-#### Purpose and Use-Cases
-*   **Class Components**: Exists strictly for maintenance of legacy codebases (pre-React 16.8). 
-*   **Functional Components**: The primary building block. Encourages the "Single Responsibility Principle" through Hook composition.
-
-#### Editable State
-*   **Class Components**: `this.setState()` triggers a shallow merge. 
-*   **Functional Components**: `useState` and `useReducer` allow for granular state updates. In 2026, state is typically treated as immutable, often managed via deep-comparable structures or reactive primitives.
-
-#### Lifecycle Methods vs. Synchronization
-*   **Class Components**: Lifecycle methods are imperative and grouped by timing (Mount, Update, Unmount). This often leads to fragmented logic, where related code is spread across multiple methods.
-*   **Functional Components**: The `useEffect` hook enables **synchronization logic**. By focusing on state dependencies rather than lifecycle events, the code remains highly cohesive.
-    *   *Note*: `useEffect` is increasingly replaced by specialized hooks or server-side primitives in React 19+.
-
-#### Context and State Management
-*   **Class Components**: Consumed via `static contextType` (limited to one context) or Render Props.
-*   **Functional Components**: `useContext` hook allows multiple context consumptions. Compatible with modern state stores like **Zustand**, **Valtio**, or **React Query**, which leverage hooks for seamless reactivity.
-
-### Adoption and Transition
-
-*   **React 19/20 Shift**: Modern React emphasizes **Server Components (RSC)**. Functional Components are now the execution unit for both Server and Client-side rendering.
-*   **Performance**: Functional components perform better with the **React Compiler**, which automatically memoizes components, a feat difficult to achieve with complex `class` hierarchies.
-*   **Maintenance**: Migrating legacy classes to functional components is the recommended path to reduce technical debt and unlock features like Concurrent Rendering and Streaming SSR.
-
-### Key Takeaways
-
-*   **Class Components**: 
-    *   Deprecated pattern; rely on `this` context.
-    *   Heavyweight, imperative, and verbose.
-    *   Restrictive composition patterns.
-*   **Functional Components**: 
-    *   Standardized since React 16.8; mandatory for modern paradigms (RSC).
-    *   Lean, declarative, and highly reusable.
-    *   Deeply integrated with the React ecosystem and performance-optimizing compilers.
-<br>
-
-## 8. How do you handle _events_ in _React_?
-
-### Handling Events in React (2026 Standards)
-
-React handles events via **SyntheticBaseEvent**, a cross-browser wrapper around the native browser event. This abstraction ensures consistent interface behavior across environments (DOM, React Native) and provides performance optimizations.
-
-#### Synthetic Events
-React normalizes events so that they have the same properties across all browsers. As of **React 19**, synthetic events are not pooled, eliminating the need to call `event.persist()` to access event properties asynchronously.
-
-#### Event Subscription
-- **Naming Conventions**: React uses `camelCase` for event handlers (e.g., `onClick`, `onKeyDown`) instead of the native HTML lowercase (e.g., `onclick`).
-- **Function References**: You pass a function as the event handler rather than a string.
-- **Modern Syntax**: Class components are legacy. Modern development utilizes **Functional Components** with **Hooks**.
-
-#### Modern Event Handling: Functional Components
-In 2026, state is managed via `useState`. Binding in constructors is unnecessary, and the use of `useCallback` is recommended to prevent unnecessary re-renders of child components receiving event handlers.
-
-### Code Example: Functional Component Pattern (React 19)
-
-```tsx
-import { useState, useCallback, FormEvent, ChangeEvent } from 'react';
-
-export default function Form() {
-  const [value, setValue] = useState<string>('');
-
-  // useCallback optimizes performance by memoizing the handler reference
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  }, []);
-
-  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Submitted:', value);
-  }, [value]);
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name-input">Name:</label>
-      <input 
-        id="name-input"
-        type="text" 
-        value={value} 
-        onChange={handleChange} 
-      />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-### Key Architectural Updates (2026)
-1. **Event Delegation**: React 19 continues to attach event listeners to the root container rather than individual DOM nodes, reducing memory overhead to $O(1)$ relative to total interactive elements.
-2. **TypeScript Integration**: Strictly typed `ChangeEvent` and `FormEvent` objects replace the generic `event` type, ensuring type safety in the event pipeline.
-3. **Transition API**: For non-urgent updates (e.g., filtering a large list), `useTransition` should be used to prevent event handlers from blocking the main thread, maintaining a UI responsiveness complexity of $O(1)$ for input latency.
-<br>
-
-## 9. What are _state_ and _props_ in _React_?
-
-### Data Management in React (2026 Standards)
-
-In modern React (v19+), **props** and **state** remain the fundamental primitives for data propagation and UI synchronization. React's architecture follows a **unidirectional data flow** where data typically moves from parent to child via props, while state remains localized to the component or lifted to shared ancestors.
-
-### Role & Lifecycle
-
-*   **Props (Properties):** Immutable data objects passed from a parent component to a child. They serve as the component’s **configuration**. A component must be **pure** with respect to its props; it should never modify its own props, as they are managed by the parent.
-*   **State:** Local, mutable data storage within a component. Updating state via the setter function (e.g., `useState` dispatch) schedules a **re-render** of the component tree to reflect the new state.
-
-### Strategic Selection
-
-*   **Props:** Use for data transmission, configuration, and event callbacks. Props act as the "API" of a component.
-*   **State:** Use for data that changes over the component’s lifecycle—such as user inputs, server-side response buffers, or ephemeral UI toggles. With the rise of Server Components in React 19, state is minimized in favor of streaming data directly from the server.
-
-### Management & Performance
-
-*   **Re-rendering:** React uses a **Fiber** reconciliation algorithm. Updating state triggers a sub-tree render. In 2026, we avoid manual optimization like `shouldComponentUpdate` (deprecated for functional components). Instead, we utilize `useMemo`, `useCallback`, and the `memo` Higher-Order Component to prevent unnecessary re-computations.
-*   **State Hoisting:** When multiple components share state, "lift" the state to the nearest common ancestor.
-*   **Composition:** Rather than deep prop-drilling, use **React Context** or **Server Components** to inject data into sub-trees.
-
-### Unifying with Hooks and Server Components
-
-*   **Functional Components:** The industry standard. Class components are legacy and should not be used in new projects.
-*   **React 19 Context:** The `use` hook has modernized how we consume Promises and Context, allowing for cleaner asynchronous state resolution within components.
-*   **Server Components:** By default, components in the App Router architecture are **Server Components**. They do not support hooks like `useState`. State is relegated to **Client Components** explicitly marked with the `"use client"` directive.
-
-### Code Example: Modernized State and Props
+#### Modern Implementation (2026 Standards)
+Modern environments leverage **Streams API** and **Web Workers** for efficient frame reconstruction, avoiding the memory-intensive string concatenation seen in older implementations.
 
 ```javascript
-'use client';
+// 2026 Modern Implementation using ReadableStream
+const socket = new WebSocket('wss://api.example.com/stream');
 
-import React, { useState, memo } from 'react';
-
-// Use memo to prevent unnecessary re-renders of stable children
-const Button = memo(({ text, color, onClick }) => {
-  return (
-    <button style={{ backgroundColor: color }} onClick={onClick}>
-      {text}
-    </button>
-  );
+// Using a TransformStream to handle fragmentation natively
+const messageStream = new TransformStream({
+  transform(chunk, controller) {
+    // Logic for handling FIN bits and buffer assembly
+    controller.enqueue(chunk);
+  }
 });
 
-const ColorPicker = () => {
-  const [color, setColor] = useState('blue');
-
-  // useCallback is omitted here for brevity, 
-  // but recommended for complex prop-drilling scenarios.
-  return (
-    <div>
-      <p>Current Color: {color}</p>
-      <Button text="Red" color="red" onClick={() => setColor('red')} />
-      <Button text="Blue" color="blue" onClick={() => setColor('blue')} />
-    </div>
-  );
-};
-
-export default ColorPicker;
-```
-
-### Complexity Analysis
-*   **Rendering Complexity:** Given $n$ nodes in a component sub-tree, a state update has a time complexity of $O(n)$ in the worst case, as React must perform reconciliation (diffing) to determine DOM patches. 
-*   **Optimization:** Using `memo` reduces the branching factor of the reconciliation process, effectively pruning sub-trees that do not require re-evaluation, optimizing performance towards $O(k)$ where $k$ is the number of changed nodes.
-<br>
-
-## 10. How do you pass _data_ between _components_ in _React_?
-
-### Data Propagation in React (2026)
-
-**Data propagation** in React (v19+) adheres to the core principle of **unidirectional data flow**. While the fundamentals of Props and Callbacks remain, modern React emphasizes **Server Components**, **Context API**, and **Signals** (or state management libraries) to mitigate "prop drilling."
-
-#### Mechanism 1: Unidirectional Props
-Props facilitate parent-to-child communication. In React 19, props are now treated as standard **stable arguments** to component functions, eliminating the need for `React.FC` wrapper types, which are now largely considered boilerplate.
-
-#### Mechanism 2: Callback Functions
-Data moves up the tree when children invoke functions passed down as props. These functions typically trigger `dispatch` actions or state setters (e.g., `useState`, `useActionState`).
-
----
-
-### Best Practices: 2026 Standards
-
-1.  **Component Definition**: Prefer standard function declarations over `React.FC`.
-2.  **Type Safety**: Use `interface` or `type` for props, favoring **discriminated unions** for complex state transitions.
-3.  **Prop Drilling Mitigation**: For deep tree propagation, use the **Context API** or **Signals** to bypass intermediary components.
-4.  **Composition**: Use the `children` prop (or slot patterns) to compose components, reducing the need to pass data through multiple layers.
-
----
-
-### Modernized Code Example: State Synchronization
-
-In this 2026-compliant implementation, `App` maintains the state, and `DropDown` notifies the parent of changes via a callback, maintaining **Single Source of Truth (SSOT)**.
-
-```tsx
-// src/components/DropDown.tsx
-interface DropDownProps {
-  options: string[];
-  onSelect: (option: string) => void;
-  selected: string;
-}
-
-// Modern function declaration without React.FC boilerplate
-export function DropDown({ options, onSelect, selected }: DropDownProps) {
-  return (
-    <nav>
-      <p>Current: {selected}</p>
-      {options.map((opt) => (
-        <button 
-          key={opt} 
-          onClick={() => onSelect(opt)}
-          aria-pressed={selected === opt}
-        >
-          {opt}
-        </button>
-      ))}
-    </nav>
-  );
-}
-
-// src/App.tsx
-import { useState } from 'react';
-import { DropDown } from './components/DropDown';
-
-export default function App() {
-  const [selection, setSelection] = useState<string>('Apple');
-  const options = ['Apple', 'Banana', 'Cherry'];
-
-  return (
-    <main>
-      <DropDown 
-        options={options} 
-        onSelect={setSelection} 
-        selected={selection} 
-      />
-      <section>You selected: {selection}</section>
-    </main>
-  );
-}
-```
-
-### Complexity Analysis
-For a tree of depth $d$ and branching factor $b$, passing props through every layer incurs:
-- **Time Complexity**: $O(1)$ per prop transfer.
-- **Maintenance Complexity**: $O(d)$ for refactoring.
-
-Using **Context API** reduces maintenance complexity to $O(1)$ for leaf node access, effectively decoupling the intermediate nodes from the data propagation logic.
-<br>
-
-## 11. What is a _stateful component_?
-
-### Modernization Audit (2026 Standards)
-
-The original content relies on **Class Components** (`React.Component`), which are legacy patterns. In **React 19**, the industry standard for state management is the **Hooks API**. While class components remain supported for backward compatibility, they are deprecated in modern architectural paradigms.
-
-#### Definition
-**Stateful components** in React are components that manage internal data that persists across renders. In modern React, this is achieved using the `useState` or `useReducer` hooks. When state values update, React triggers a re-render of the component to synchronize the DOM with the new state.
-
-### When to Use
-
-*   **Dynamic Interactions**: Components requiring real-time updates (e.g., counters, toggles).
-*   **User Input Handling**: Managing controlled components in forms.
-*   **Data Synchronization**: Handling asynchronous API responses and managing their loading/error states.
-
-### Code Example: Functional Stateful Component
-
-In **React 19**, use the `useState` hook. This approach eliminates `this` binding issues and reduces boilerplate code.
-
-```jsx
-import React, { useState } from 'react';
-
-const ClickCounter = () => {
-  // useState returns the current value and a setter function
-  const [count, setCount] = useState(0);
-
-  const handleIncrement = () => {
-    // Functional updates ensure correct state transition based on previous value
-    setCount((prevCount) => prevCount + 1);
-  };
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={handleIncrement}>Increment</button>
-    </div>
-  );
-};
-
-export default ClickCounter;
-```
-
-### Technical Note: Complexity & Performance
-*   **Re-rendering**: State updates in React trigger a reconciliation process. React utilizes a **Fiber** architecture, allowing the engine to split rendering work into chunks with an asymptotic complexity of $O(n)$ in the worst case relative to the component tree size.
-*   **Memoization**: To optimize stateful components, use `React.memo` or `useMemo` to prevent unnecessary re-renders of child components if props remain referentially equal, maintaining efficient $O(1)$ lookup for dependency changes.
-<br>
-
-## 12. Can you explain how _useState_ works?
-
-### `useState` in Modern React (2026)
-
-**`useState`** is a fundamental **React Hook** that enables functional components to maintain state across re-renders. It returns a pair: the current state value and a dispatch function to update it. By leveraging **Fiber architecture**, React tracks the order of hook calls via a linked list stored on the `memoizedState` property of the `fiber` node.
-
-#### Core Components of `useState`
-
-1. **Stateful Value**: The first element in the returned array represents the current state. React preserves this value between renders.
-2. **Dispatch Function**: The second element is the state-setter. In React 19+, this function is stable across renders, allowing it to be passed as a prop without triggering unnecessary downstream re-renders.
-
-#### Behavioral Traits of `useState`
-
-*   **Lazy Initialization**: Passing a function to `useState` (e.g., `useState(() => expensiveCalculation())`) ensures the function executes only during the **initial mount**. This prevents unnecessary overhead during subsequent render cycles, which occur with $O(n)$ complexity relative to the state tree size.
-*   **State Batching**: Since React 18, all state updates—including those in promises, timeouts, and native event handlers—are automatically batched. This minimizes the number of DOM mutations, effectively reducing the render cost to $O(1)$ per state transition.
-*   **Referential Integrity**: Each call to `useState` is indexed by its position in the component's hook list. Conditional execution of hooks is strictly forbidden; breaking this rule causes an architectural mismatch in the linked list, leading to state corruption.
-
-#### Functional Updates
-When the new state is derived from the previous state, pass an updater function to avoid stale closures. This pattern is mandatory for **Concurrent React** environments to ensure consistent state transitions.
-
-```jsx
-import { useState } from 'react';
-
-const Counter = () => {
-  // 2026 Best Practice: Using an arrow function for atomic updates
-  const [count, setCount] = useState(0);
-
-  return (
-    <button onClick={() => setCount((prev) => prev + 1)}>
-      Count: {count}
-    </button>
-  );
-};
-```
-
-#### Performance Analysis
-Updating state triggers a **Reconciliation** process. React compares the new state with the previous state using `Object.is`. If they are identical, React performs a **bailout**, preventing a re-render of the component and its children. The time complexity for this check is $O(1)$.
-<br>
-
-## 13. How do you update the _state_ of a _parent component_ from a _child component_?
-
-### Modernizing React State Synchronization (2026 Standards)
-
-**React** enforces **unidirectional data flow**, where data descends the tree via props. Updating **Parent state** from a **Child component** is fundamentally achieved via **Lifting State Up**, leveraging callbacks or dependency injection.
-
-### Primary Methods
-
-1. **Props Callback (Standard Pattern)**: The parent passes a memoized handler function (e.g., `useCallback`) as a prop. The child invokes this function to trigger a state update in the parent.
+socket.onmessage = async (event) => {
+  // Utilizing the Blob/ArrayBuffer interface for memory efficiency
+  const data = event.data;
   
-2. **Context API (via State-Reducer Pattern)**: Use `createContext` coupled with `useReducer` to provide a state dispatcher. This avoids "prop drilling" in deep component trees and is the preferred 2026 standard for intermediate-scale state sharing.
-
-### Advanced Patterns (2026 Context)
-
-1. **Imperative Handle (`useImperativeHandle`)**: Used with `forwardRef` to expose specific imperative methods to a parent. This is preferred over direct reference manipulation, allowing the parent to trigger child logic while maintaining **encapsulation**.
-
-2. **State Management Libraries (Zustand/TanStack Store)**: For complex global state, **Zustand** is the industry standard (2026) due to its minimal boilerplate and **atomic updates**. Redux Toolkit remains viable for large-scale enterprise systems, while MobX is largely relegated to legacy maintenance.
-
-3. **Server State (TanStack Query/SWR)**: Do not use local/global state for server data. Use **TanStack Query** to synchronize client-side state with the server, ensuring automatic cache invalidation and mutation handling.
-
-### Code Example: Optimized Callback (React 19+)
-
-```jsx
-// Parent.jsx
-import { useState, useCallback } from 'react';
-import { Child } from './Child';
-
-export const Parent = () => {
-  const [data, setData] = useState('');
-
-  // useCallback prevents unnecessary re-renders of the child
-  const handleUpdate = useCallback((newValue) => {
-    setData(newValue);
-  }, []);
-
-  return <Child onUpdate={handleUpdate} />;
-};
-
-// Child.jsx
-import { memo } from 'react';
-
-// memo ensures the child only re-renders if props change
-export const Child = memo(({ onUpdate }) => {
-  return (
-    <button onClick={() => onUpdate('Updated via memoized callback')}>
-      Update Parent
-    </button>
-  );
-});
-```
-
-### Architectural Performance Note
-When updating parent state, ensure the state is placed as low as possible in the tree to prevent unnecessary re-renders of unrelated branches. Complexity of state propagation in React is $O(n)$, where $n$ is the number of component updates. Utilize `React.memo` and `useCallback` to maintain an amortized update cost of $O(1)$ relative to the total component count.
-<br>
-
-## 14. What is _lifting state up_ in _React_?
-
-### Definition: Lifting State Up
-**Lifting State Up** is the architectural pattern of moving local component state to a common ancestor to synchronize data across multiple dependent components. This enforces a **unidirectional data flow**, ensuring that changes propagate downward through `props` while maintaining a **Single Source of Truth (SSOT)**.
-
-### Why Use Lifting State Up?
-- **Data Synchronization**: Ensures child components react to the same state updates, preventing disparate or "stale" UI states.
-- **Derived State Efficiency**: Simplifies logic where multiple children depend on a single state variable; the parent calculates derived values, reducing redundant computations.
-
-### Core Mechanism: React 19 Standards
-In modern React (19+), functional components and hooks have superseded class-based components. State is managed via `useState` and synchronized via prop drilling or **React Context** for deep component trees.
-
-### Modernized Code Implementation (React 19)
-
-#### Parent Component: `RectangleAreaCalculator`
-```jsx
-import { useState } from 'react';
-
-const RectangleAreaCalculator = () => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setDimensions(prev => ({ ...prev, [name]: Number(value) }));
-  };
-
-  return (
-    <section>
-      <ShapeInput name="width" value={dimensions.width} onChange={handleChange} />
-      <ShapeInput name="height" value={dimensions.height} onChange={handleChange} />
-      <ShapeArea area={dimensions.width * dimensions.height} />
-    </section>
-  );
+  // In 2026, logic handles binary fragments via Uint8Array concatenation
+  // to avoid the O(n^2) cost of string concatenation in older JS engines
+  const buffer = await new Response(data).arrayBuffer();
+  processBuffer(buffer);
 };
 ```
 
-#### Child Components: `ShapeInput` and `ShapeArea`
-```jsx
-const ShapeInput = ({ name, value, onChange }) => (
-  <div>
-    <label>{name.charAt(0).toUpperCase() + name.slice(1)}</label>
-    <input name={name} type="number" value={value} onChange={onChange} />
-  </div>
-);
+### Complexity Analysis
+The reconstruction of WebSocket frames is effectively $O(n)$ relative to the total payload size, where $n$ is the sum of bytes in all fragments. Because TCP guarantees the arrival of segments in order ($i, i+1, \dots, n$), the application-level reconstruction is memory-bound rather than compute-bound. 
 
-const ShapeArea = ({ area }) => <div>Area: {area}</div>;
-```
+$$T(n) = \sum_{i=1}^{k} \text{copy}(frame_i) \approx O(n)$$
 
-### Advantages
-- **SSOT Integrity**: Prevents state duplication. Since React's reconciliation engine ($O(n)$ complexity for component tree updates) relies on state stability, centralized control minimizes unnecessary re-renders.
-- **Predictable Debugging**: Facilitates the use of DevTools to trace state mutations from the parent down, streamlining the isolation of UI defects.
-
-### Implementation Patterns
-- **Controlled Components**: Form inputs are managed entirely via parent state, making validation and submission logic centralized.
-- **Cross-Component Communication**: Facilitates sibling interaction that would otherwise require complex event bubbling or context overhead.
-
-### When It's Overkill
-Lifting state unnecessarily causes **Prop Drilling**, where intermediate components pass data they do not utilize. 
-
-- **Escalation Path**: If state must be accessed by components deeply nested in the tree (e.g., global themes, auth state), utilize the **Context API** or state management libraries (e.g., Zustand or TanStack Store) to bypass the middle-tier components. 
-- **Heuristic**: If moving state up increases the `props` count of intermediate components by more than 3, evaluate the use of **Composition** (passing components as `children`) or a dedicated state provider.
+*Note: The usage of `ArrayBuffer` and `TypedArrays` in 2026 environments ensures that the space complexity remains $O(n)$, minimizing garbage collection pressure compared to legacy string concatenation.*
 <br>
 
-## 15. When do you use _Redux_ or _Context API_ for state management?
+## 12. Can WebSockets be used for broadcasting messages to multiple clients? If so, how?
 
-### State Management Architecture: Redux vs. Context API (2026 Standards)
+### WebSocket Broadcasting: 2026 Architectural Audit
 
-Managing application state in **React 19** requires distinguishing between **Global App State** (frequently changing, high-frequency updates) and **Dependency Injection** (low-frequency updates, configuration).
+**WebSockets** support true **bidirectional full-duplex communication**. While the protocol defines point-to-point connections between a client and a server, broadcasting is achieved by maintaining an application-level registry of active connections and iterating over them. 
 
-### Redux (Redux Toolkit)
-In 2026, **Redux Toolkit (RTK)** is the mandatory interface. The legacy `connect` HOC is deprecated; the `useSelector` and `useDispatch` hooks are the standard for all functional components.
+### Modern Broadcasting Mechanism
+- **Connection Registry**: The server manages a set of active socket descriptors.
+- **Complexity**: Broadcasting a message to $N$ connected clients incurs an $O(N)$ overhead per message.
+- **Horizontal Scaling**: In 2026 production environments, simple memory-resident sets (as shown in the previous code) fail under load-balanced clusters. **Pub/Sub brokers** (e.g., Redis, NATS, or RabbitMQ) are now the standard for synchronizing state across multiple server nodes.
 
-1.  **High-Frequency State**: Optimized for state that changes multiple times per second (e.g., real-time tickers, complex drag-and-drop buffers).
-2.  **Predictable State Transitions**: Enforces unidirectional data flow via **Immer**-integrated reducers, ensuring state immutability with $O(1)$ conceptual complexity for developers.
-3.  **Middleware Ecosystem**: Robust support for side-effect management via **RTK Query**, which natively handles caching, polling, and optimistic updates, reducing boilerplate compared to manual `useEffect` implementations.
-4.  **DevTools & Observability**: Provides centralized logging and time-travel debugging, which remains the industry standard for auditing complex state trajectories in distributed teams.
+### Optimized Code Example (Python 3.14+)
+Using modern `asyncio` patterns and typed connection management.
 
-#### When to Pick Redux
-*   **Complex State Dependencies**: Use when state slices share data or require relational logic.
-*   **Large-Scale Performance Requirements**: Use when granular component updates are required to prevent re-rendering the entire component tree.
-*   **Advanced Caching**: Use when the application requires sophisticated data fetching and cache invalidation strategies provided by RTK Query.
+```python
+import asyncio
+from typing import Set
+from websockets.server import serve, WebSocketServerProtocol
 
-### React Context API
-**Context API** is a dependency injection mechanism, not a state management solution. It is designed to propagate values through the tree without prop drilling.
+# Type-hinted connection tracking
+active_clients: Set[WebSocketServerProtocol] = set()
 
-1.  **Lightweight Integration**: Zero-bundle overhead as it is a core feature of React. Ideal for avoiding third-party dependency bloat in lightweight components.
-2.  **Performance Constraints**: Context broadcasts updates to all consumers whenever the value changes. Without memoization ($useMemo$, $memo$), this triggers re-renders across the entire provider tree, resulting in $O(n)$ re-render complexity where $n$ is the number of child nodes.
-3.  **Encapsulation**: Simplifies the distribution of static or semi-static data (e.g., Localization, Theme, Auth session).
+async def handler(websocket: WebSocketServerProtocol):
+    active_clients.add(websocket)
+    try:
+        async for message in websocket:
+            # Broadcast pattern: Concurrently propagate to all clients
+            if active_clients:
+                tasks = [client.send(message) for client in active_clients]
+                await asyncio.gather(*tasks, return_exceptions=True)
+    finally:
+        active_clients.remove(websocket)
 
-#### When to Pick Context API
-*   **Static or Low-Frequency Data**: Ideal for configuration data that rarely changes (e.g., UI themes, current user locale).
-*   **Simple Dependency Injection**: Use when you need to pass down services or singleton instances without explicit prop drilling.
-*   **Component Libraries**: Essential for building compound component patterns where sub-components must access parent state implicitly.
+async def main():
+    async with serve(handler, "localhost", 8765):
+        await asyncio.get_running_loop().create_future()  # Run forever
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Architectural Best Practices (2026)
+
+*   **Broadcast Reliability**: The naive loop $O(N)$ is susceptible to slow-client head-of-line blocking. Utilize `asyncio.gather` with `return_exceptions=True` to prevent a single disconnected client from crashing the broadcast loop.
+*   **Pub/Sub Decoupling**: For distributed systems, replace the local `set()` with an external event bus. When a server node receives an event, it publishes to a Redis channel; all server instances subscribe to this channel and push to their locally connected clients.
+*   **Connection Lifecycle**: Always implement **Heartbeat/Ping-Pong** mechanisms (handled natively by the `websockets` library) to prune stale connections ($O(1)$ cleanup) and prevent memory leaks.
+*   **Protocol Considerations**: For scenarios requiring unidirectional broadcasting (server-to-client only), evaluate **Server-Sent Events (SSE)** over HTTP/2, which provides automatic reconnection and lower header overhead compared to the WebSocket handshake.
+<br>
+
+## 13. What is the difference between WebSockets and Server-Sent Events (SSE)?
+
+### Comparative Audit: WebSockets vs. Server-Sent Events (SSE)
+
+**WebSockets** and **Server-Sent Events** (SSE) represent distinct architectural patterns for streaming data. As of 2026, SSE is universally supported across all modern browsers (including full implementation in WebKit/Safari), rendering the previous "niche" classification obsolete.
+
+### Key Distinctions
+
+#### WebSockets
+- **Characteristics**: **Full-duplex**, bidirectional communication over a single, long-lived TCP connection. Enables low-latency, stateful interactions where both the client and server act as peers.
+- **Protocol**: Operates on a custom framing protocol (RFC 6455) initiated via an HTTP 1.1/2/3 upgrade request.
+- **Complexity**: Requires **state management** on both ends. Developers must manually implement heartbeat mechanisms (ping/pong) to detect silent connection drops.
+- **Use Case**: High-frequency, interactive applications requiring sub-millisecond latency, such as **collaborative editing (CRDTs)**, multiplayer gaming, and high-frequency trading dashboards.
+
+#### Server-Sent Events (SSE)
+- **Characteristics**: **Unidirectional** (Server-to-Client). Operates over standard HTTP. Once the connection is established, the server pushes text-based event streams to the client.
+- **Protocol**: Native **HTTP**. It leverages standard transport layers, meaning it benefits from HTTP/2 multiplexing and HTTP/3 (QUIC) stream-level features without requiring a custom protocol handshake.
+- **Features**: Built-in support for **automatic reconnection**, event ID tracking for message recovery, and lightweight consumption via the `EventSource` API. 
+- **Use Case**: Low-overhead streaming of data updates, such as **LLM response generation** (streaming inference tokens), live notification feeds, and telemetry monitoring.
 
 ### Technical Comparison Summary
 
-| Feature | Redux Toolkit | Context API |
+| Feature | WebSockets | Server-Sent Events (SSE) |
 | :--- | :--- | :--- |
-| **Primary Use** | Complex, high-frequency state | Configuration, Dependency Injection |
-| **Performance** | Selective rendering (selectors) | Full subtree re-render (default) |
-| **Boilerplate** | Moderate (standardized via RTK) | Minimal |
-| **DevTools** | Native Time-Travel | Limited (React DevTools only) |
-| **Complexity** | $O(1)$ to $O(log n)$ scaling | $O(n)$ rendering behavior |
+| **Communication** | Full-Duplex (Bidirectional) | Unidirectional (Server -> Client) |
+| **Transport** | Custom TCP/HTTP Upgrade | Native HTTP (1.1, 2, 3) |
+| **Connection Overhead** | High (Stateful) | Low (Stateless HTTP) |
+| **Data Format** | Binary or Text (Custom) | UTF-8 Text (EventStream) |
+| **Browser Support** | Universal | Universal (including Safari/iOS) |
+| **Complexity** | $O(n)$ state sync logic | $O(1)$ stream consumption |
 
-**Audit Conclusion**: Favor **Context API** for global UI configurations and **Redux Toolkit** for application business logic, form state, and server-cache synchronization. Abandon the use of legacy class-based `connect` patterns in favor of the current Hook-based API.
+#### 2026 Architectural Guidance
+*   **Prefer SSE** for read-heavy or update-heavy applications (e.g., real-time monitoring, AI token streaming) due to the reduced resource overhead of standard HTTP and native automatic reconnection. 
+*   **Prefer WebSockets** only when the application requires true peer-to-peer messaging (e.g., VoIP, gaming). Avoid WebSockets for simple "server-to-client" updates to prevent unnecessary TCP handshake overhead and state management complexity.
+<br>
+
+## 14. Explain how a WebSocket connection is closed.
+
+### WebSocket Connection Termination (2026 Standard)
+
+A **WebSocket connection** (RFC 6455) is a persistent, full-duplex communication channel. Termination follows a defined **Close Handshake** procedure to ensure data integrity.
+
+### Closure Scenarios
+
+#### The Close Control Frame
+Termination is governed by the exchange of **Close frames** (Opcode `0x8`). When one endpoint initiates closure, it sends a Close frame containing an optional status code and reason. The peer must acknowledge this with a corresponding Close frame before the underlying **TCP connection** is severed.
+
+#### The CloseEvent Interface
+Upon termination, the browser triggers a `CloseEvent` on the `WebSocket` object:
+
+*   **`code`**: An `unsigned short` indicating the closure status (e.g., `1000` for Normal Closure).
+*   **`reason`**: A `USVString` providing a human-readable explanation.
+*   **`wasClean`**: A `boolean` (True if the connection closed gracefully via the handshake).
+
+### Closing via Client API
+
+1. **Graceful Closure**: The client invokes `socket.close(code, reason)`. The browser initiates the handshake and waits for the server to acknowledge.
+2. **Abrupt Termination**: Triggered by network interface loss or `AbortController` signal integration, resulting in `wasClean = false`.
+
+### Closing via Server-Side
+
+1. **Graceful Closure**: The server sends a Close frame. The client, upon receipt, must respond with its own Close frame.
+2. **Protocol Error**: If the server detects a violation of the WebSocket protocol (e.g., malformed frames), it terminates the connection immediately with status `1002`.
+
+### 2026 Lifecycle Management
+
+Modern applications leverage the **Streams API** or **WebTransport** for high-performance needs, but for standard WebSockets, connection stability is managed via `keepalive` mechanisms at the transport layer to prevent silent TCP half-open states.
+
+### Implementation: Modern Closure Handling
+
+```javascript
+// React 19 / Modern Browser Context
+const socket = new WebSocket('wss://api.example.com/v1/stream');
+
+socket.onclose = (event) => {
+  const { code, reason, wasClean } = event;
+  
+  if (wasClean) {
+    console.info(`Connection closed cleanly [${code}]: ${reason}`);
+  } else {
+    // Implement exponential backoff reconnection logic
+    console.error(`Connection dropped unexpectedly [${code}]`);
+    attemptReconnection();
+  }
+};
+
+// Standardized closure invocation
+const handleShutdown = (reason) => {
+  // 1000: Normal Closure
+  socket.close(1000, reason || 'Client-side termination');
+};
+
+// React 19: Clean up during component unmount
+import { useEffect } from 'react';
+
+function useWebSocket(url) {
+  useEffect(() => {
+    const ws = new WebSocket(url);
+    return () => ws.close(1000, 'Component unmounted');
+  }, [url]);
+}
+```
+
+### Technical Note on Status Codes
+As of 2026, status codes follow IANA registry standards:
+*   **1000**: Normal Closure (Success).
+*   **1001**: Going Away (Browser navigation or server shutdown).
+*   **1006**: Abnormal Closure (Signal for reconnection logic).
+*   **1011**: Internal Error (Server-side exception).
+<br>
+
+## 15. What fallback mechanisms can be used if WebSockets are not supported by a browser or server?
+
+### Modernization Audit: Real-Time Communication Fallbacks
+
+In 2026, the architectural standard for real-time web communication relies on the **WebSocket API (RFC 6455)**, **WebTransport**, and **Server-Sent Events (SSE)**. Legacy polling methods are discouraged due to high overhead on $O(n)$ network traffic and server resource exhaustion. 
+
+Modern applications favor **graceful degradation** via libraries like Socket.io or SignalR, which abstract these fallback chains.
+
+---
+
+### Polling & Streaming Evolution
+
+#### Short Polling (Deprecated/Legacy)
+*   **Mechanism**: Periodic HTTP requests.
+*   **Assessment**: High latency and significant server overhead ($O(n)$ requests over time). Use only if extreme backward compatibility is required.
+
+#### Long Polling (Deprecated)
+*   **Mechanism**: Server holds request until data is available. 
+*   **Assessment**: Mitigates latency but suffers from **Head-of-Line (HoL) blocking** and connection overhead. Avoid in 2026 deployments.
+
+#### Server-Sent Events (SSE)
+*   **Mechanism**: Unidirectional, text-based stream over HTTP.
+*   **2026 Status**: Re-emerged as the preferred standard for AI streaming (e.g., LLM tokens) and unidirectional updates. Native browser support is excellent.
+*   **Pros**: Efficient, built-in reconnection logic, lower overhead than WebSockets.
+
+#### HTTP/3 and WebTransport
+*   **Mechanism**: A modern successor to WebSockets, operating over QUIC.
+*   **2026 Status**: **The industry standard for low-latency, multiplexed communication.** It solves HoL blocking and provides both reliable and unreliable data streams.
+
+---
+
+### Implementation Patterns (2026 Standard)
+
+#### Modern Fetch/SSE Implementation
+```javascript
+// Using ReadableStream for efficient processing (2026 Standard)
+async function consumeStream(url) {
+  const response = await fetch(url, { headers: { 'Accept': 'text/event-stream' } });
+  const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    processData(value);
+  }
+}
+```
+
+#### WebTransport (The 2026 WebSocket Alternative)
+```javascript
+// WebTransport provides high-performance, low-latency streams
+const transport = new WebTransport('https://api.example.com:443/ws');
+await transport.ready;
+
+const stream = await transport.createBidirectionalStream();
+const writer = stream.writable.getWriter();
+await writer.write(new TextEncoder().encode('Hello, Server!'));
+```
+
+---
+
+### Architectural Recommendations
+
+| Mechanism | 2026 Usage | Rationale |
+| :--- | :--- | :--- |
+| **WebTransport** | **Primary** | Multiplexed, QUIC-based, solves HoL blocking. |
+| **SSE** | **Secondary** | Best for unidirectional data (AI streaming/dashboards). |
+| **WebSockets** | **Legacy/Compat** | Maintain for existing infrastructure; migration is recommended. |
+| **Polling** | **Prohibited** | Use only for edge cases where persistent streams are blocked. |
+
+### Security & Reliability
+*   **TLS/QUIC**: All real-time streams must operate over `WSS` or `HTTP/3` (TLS 1.3). Encryption is mandatory.
+*   **Backpressure**: Implement `ReadableStream` backpressure to ensure that slow clients do not cause memory spikes on the server.
+*   **Connection Resilience**: Use `Exponential Backoff` for reconnection logic ($T = min(cap, base \times 2^{attempt})$) to prevent "thundering herd" server crashes.
 <br>
 
 
 
-#### Explore all 100 answers here 👉 [Devinterview.io - React](https://devinterview.io/questions/web-and-mobile-development/react-interview-questions)
+#### Explore all 100 answers here 👉 [Devinterview.io - WebSockets](https://devinterview.io/questions/web-and-mobile-development/websocket-interview-questions)
 
 <br>
 
